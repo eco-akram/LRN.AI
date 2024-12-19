@@ -10,6 +10,7 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { Text } from "react-native";
 import "react-native-reanimated";
+import * as NavigationBar from "expo-navigation-bar";
 
 import "../global.css";
 import { View } from "react-native";
@@ -18,10 +19,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-SplashScreen.setOptions({
+/* SplashScreen.setOptions({
   duration: 1000,
   fade: true,
-});
+}); */
 
 export default function RootLayout() {
   const [loaded] = useFonts({
@@ -41,6 +42,9 @@ export default function RootLayout() {
       </View>
     );
   }
+
+  NavigationBar.setPositionAsync("absolute");
+  NavigationBar.setBackgroundColorAsync("#ffffff01");
 
   return (
     <Stack>

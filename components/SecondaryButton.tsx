@@ -1,23 +1,25 @@
 import { TouchableOpacity } from "react-native";
 import { Text } from "react-native";
 
-type PrimaryButtonProps = {
+type SecondaryButtonProps = {
   onPress: () => void; // Function called when the button is pressed
   title: string; // The text displayed on the button
 };
 
-const PrimaryButton: React.FC<PrimaryButtonProps> = ({
+const SecondaryButton: React.FC<SecondaryButtonProps> = ({
   onPress,
   title,
   ...props
 }) => (
   <TouchableOpacity
     onPress={onPress}
-    className="w-full rounded-xl flex flex-row justify-center items-center bg-white p-3 mb-3 mt-3"
+    className="w-full rounded-xl flex flex-row justify-center items-center border border-white p-3 mb-4"
     {...props}
   >
-    <Text className="text-black">{title}</Text>
+    <Text className="text-white ">{title}</Text>
   </TouchableOpacity>
 );
 
-export default PrimaryButton;
+export default SecondaryButton;
+
+// Maybe I have to import tailwind in the components
