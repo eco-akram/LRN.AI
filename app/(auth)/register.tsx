@@ -1,4 +1,9 @@
-import { Image, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  Image,
+  ImageBackground,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { Text } from "react-native";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -7,8 +12,15 @@ import { Link, router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
 import SubmitButton from "@/components/SubmitButton";
+import { useAnimatedKeyboard, useAnimatedStyle } from "react-native-reanimated";
 
 export default function RegisterScreen() {
+  const keyboard = useAnimatedKeyboard();
+
+  const animatedStyles = useAnimatedStyle(() => ({
+    transform: [{ translateY: -keyboard.height.value }],
+  }));
+
   const [form, setform] = useState({
     username: "",
     email: "",
@@ -18,12 +30,11 @@ export default function RegisterScreen() {
   const submit = () => {};
 
   return (
-    <LinearGradient
-      colors={["transparent", "rgba(245,40,145, 1)", "rgba(50,50,50, 1)"]} // Define your gradient colors
-      locations={[0.5, 0.6, 0.7]} // Adjust the locations to control the gradient spread
+    <ImageBackground
+      source={require("@/assets/login-bg.png")}
       style={styles.background}
     >
-      <SafeAreaView className="flex-1 bg-black">
+      <SafeAreaView className="flex-1 backdrop-blur-sm">
         <View className="flex-1 justify-center">
           <Image
             source={require("@/assets/images/Logo-icon.png")}
@@ -92,7 +103,7 @@ export default function RegisterScreen() {
           </Text>
         </View>
       </SafeAreaView>
-    </LinearGradient>
+    </ImageBackground>
   );
 }
 
@@ -101,7 +112,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     flex: 1,
-    position: "absolute",
+    //position: "absolute",
   },
   logo: {
     width: 70,

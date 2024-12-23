@@ -11,6 +11,7 @@ import { useEffect } from "react";
 import { Text } from "react-native";
 import "react-native-reanimated";
 import * as NavigationBar from "expo-navigation-bar";
+import * as SystemUI from "expo-system-ui";
 
 import "../global.css";
 import { View } from "react-native";
@@ -25,6 +26,10 @@ SplashScreen.preventAutoHideAsync();
 }); */
 
 export default function RootLayout() {
+  useEffect(() => {
+    SystemUI.setBackgroundColorAsync("black");
+  }, []);
+
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
   });
