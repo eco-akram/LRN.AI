@@ -1,12 +1,9 @@
 import React from "react";
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import { Link } from "expo-router";
+import { Link, router, Redirect } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import PrimaryButton from "@/components/PrimaryButton";
-import SecondaryButton from "@/components/SecondaryButton";
 import { Image } from "expo-image";
 import { StatusBar } from "react-native";
-import { BlurView } from "expo-blur";
 
 export default function WelcomeScreen() {
   return (
@@ -36,11 +33,17 @@ export default function WelcomeScreen() {
             experiences. Join our community and start your journey towards
             success today!
           </Text>
-          <TouchableOpacity className="w-full rounded-xl flex justify-center items-center bg-white p-3 mb-3 mt-3">
+          <TouchableOpacity
+            className="w-full rounded-xl flex justify-center items-center bg-white p-3 mb-3 mt-3"
+            onPress={() => router.push("/login")}
+          >
             <Text className="text-black">Log in</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity className="w-full rounded-xl flex justify-center items-center border border-white p-3 mb-4">
+          <TouchableOpacity
+            className="w-full rounded-xl flex justify-center items-center border border-white p-3 mb-4"
+            onPress={() => router.push("/register")}
+          >
             <Text className="text-white">Sign Up</Text>
           </TouchableOpacity>
         </View>
