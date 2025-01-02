@@ -10,7 +10,6 @@ export default function AuthLayout() {
   return (
     <View style={{ backgroundColor: "black", flex: 1 }}>
       <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="welcome" options={{ animation: "fade" }} />
         <Stack.Screen name="login" options={{ animation: "fade" }} />
         <Stack.Screen name="register" options={{ animation: "fade" }} />
       </Stack>

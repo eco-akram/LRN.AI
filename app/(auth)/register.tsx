@@ -47,87 +47,82 @@ export default function RegisterScreen() {
   };
 
   return (
-    <ImageBackground
-      source={require("@/assets/login-bg.png")}
-      style={styles.background}
-    >
-      <SafeAreaView style={{ flex: 1 }}>
-        <KeyboardAvoidingView
-          style={{ flex: 1 }}
-          behavior={Platform.OS === "ios" ? "padding" : "height"}
-        >
-          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-            <View style={styles.logoContainer}>
-              <Image
-                source={require("@/assets/images/Logo-icon.png")}
-                style={styles.logo}
-              />
-            </View>
-
-            <View className="flex-1 mx-3 justify-center">
-              <View className="mb-5">
-                <Text className="text-white text-center font-bold text-2xl">
-                  Create an account, it's free!
-                </Text>
-              </View>
-
-              <FormField
-                value={form.username}
-                placeholder="Username"
-                underText="Please enter your username"
-                otherStyles="mb-4 mt-4"
-                handleChangeText={(e) =>
-                  setform({
-                    ...form,
-                    username: e,
-                  })
-                }
-              />
-
-              <FormField
-                value={form.email}
-                placeholder="Email"
-                underText="Please enter your email"
-                otherStyles="mb-4 mt-4"
-                handleChangeText={(e) =>
-                  setform({
-                    ...form,
-                    email: e,
-                  })
-                }
-              />
-
-              <FormField
-                value={form.password}
-                placeholder={"Password"}
-                underText="Don't share your password with anyone else."
-                handleChangeText={(e) =>
-                  setform({
-                    ...form,
-                    password: e,
-                  })
-                }
-                otherStyles="mb-4"
-              />
-            </View>
-          </ScrollView>
-
-          <View className="mx-3 mb-5 mt-2">
-            <SubmitButton
-              title="Sign up to LERN.AI"
-              handlePress={submit}
-              isLoading={isSubmitting}
+    <SafeAreaView className="flex-1 bg-black">
+      <KeyboardAvoidingView
+        style={{ flex: 1 }}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+          <View style={styles.logoContainer}>
+            <Image
+              source={require("@/assets/images/Logo-icon.png")}
+              style={styles.logo}
             />
-            <Text
-              className="text-cyan-500 text-center font-semibold"
-              onPress={() => router.replace("/login")}
-            >
-              Already have an account? Log in
-            </Text>
           </View>
-        </KeyboardAvoidingView>
-      </SafeAreaView>
-    </ImageBackground>
+
+          <View className="flex-1 mx-3 justify-center">
+            <View className="mb-5">
+              <Text className="text-white text-center font-bold text-2xl">
+                Create an account, it's free!
+              </Text>
+            </View>
+
+            <FormField
+              value={form.username}
+              placeholder="Username"
+              underText="Please enter your username"
+              otherStyles="mb-4 mt-4"
+              handleChangeText={(e) =>
+                setform({
+                  ...form,
+                  username: e,
+                })
+              }
+            />
+
+            <FormField
+              value={form.email}
+              placeholder="Email"
+              underText="Please enter your email"
+              otherStyles="mb-4 mt-4"
+              handleChangeText={(e) =>
+                setform({
+                  ...form,
+                  email: e,
+                })
+              }
+            />
+
+            <FormField
+              value={form.password}
+              placeholder={"Password"}
+              underText="Don't share your password with anyone else."
+              handleChangeText={(e) =>
+                setform({
+                  ...form,
+                  password: e,
+                })
+              }
+              otherStyles="mb-4"
+            />
+          </View>
+        </ScrollView>
+
+        <View className="mx-3 mb-5 mt-2">
+          <SubmitButton
+            title="Sign up to LERN.AI"
+            handlePress={submit}
+            isLoading={isSubmitting}
+          />
+          <Text
+            className="text-cyan-500 text-center font-semibold"
+            onPress={() => router.replace("/login")}
+          >
+            Already have an account? Log in
+          </Text>
+        </View>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
