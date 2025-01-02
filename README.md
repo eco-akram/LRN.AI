@@ -1,50 +1,80 @@
-# Welcome to your Expo app 👋
+# LRN.AI
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+LRN.AI is an AI-powered educational tool similar to Anki, but with enhanced features to automatically create boards and cards using artificial intelligence. This project is built primarily using TypeScript and JavaScript, with minimal CSS for styling.
 
-## Get started
+## Table of Contents
 
-1. Install dependencies
+- [Installation](#installation)
+- [Usage](#usage)
+- [Features](#features)
+- [APIs](#apis)
+- [Contributing](#contributing)
 
-   ```bash
-   npm install
-   ```
+## Installation
 
-2. Start the app
+To get started with LRN.AI, follow these steps:
 
-   ```bash
-    npx expo start
-   ```
+1. Clone the repository:
 
-In the output, you'll find options to open the app in a
+    ```sh
+    git clone https://github.com/eco-akram/LRN.AI.git
+    ```
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+2. Navigate to the project directory:
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+    ```sh
+    cd LRN.AI
+    ```
 
-## Get a fresh project
+3. Install the dependencies:
 
-When you're ready, run:
+    ```sh
+    npm install
+    ```
 
-```bash
-npm run reset-project
+## Usage
+
+To start the application, use the following command:
+
+```sh
+npm start
+```
+This will launch the application on your local development server.
+
+## Features
+
+- AI-Powered Board and Card Creation: Automatically generate educational boards and cards using artificial intelligence.
+- TypeScript and JavaScript: The core of the project is built using TypeScript for type safety and better development experience, with JavaScript for various functionalities.
+- Minimal CSS: Clean and simple user interface.
+
+## APIs
+LRN.AI leverages the following APIs:
+
+- Appwrite: A backend server for web, mobile, and flutter developers.
+- NativeWind: A utility-first CSS-in-JS framework.
+- Expo: A framework and platform for universal React applications.
+- React Navigation: Routing and navigation for your React Native apps.
+
+## Contributing
+
+We welcome contributions to LRN.AI! To contribute, follow these steps:
+1. Fork the repository.
+2. Create a new branch:
+
+```
+git checkout -b feature-name
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+3. Make your changes and commit them:
 
-## Learn more
+```
+git commit -m "Description of changes"
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+4. Push to your branch:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```
+git push origin feature-name
+```
 
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+5. Create a pull request detailing your changes.
