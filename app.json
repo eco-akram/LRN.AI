@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "LRN.AI",
-    "slug": "LRN.AI",
+    "slug": "LRN_AI",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -12,6 +12,7 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.kvk.lrn_ai",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/logo-icon.png",
         "backgroundColor": "#141414"
