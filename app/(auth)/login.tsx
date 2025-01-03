@@ -20,7 +20,7 @@ import { getCurrentUser, signIn } from "../../lib/appwrite";
 import { useGlobalContext } from "../../context/GlobalProvider";
 
 export default function LoginScreen() {
-  const { setUser, setIsLoggedIn } = useGlobalContext();
+  const { setUser, setIsLoggedIn, isLoggedIn } = useGlobalContext();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [form, setform] = useState({
     email: "",
@@ -40,6 +40,7 @@ export default function LoginScreen() {
 
       setUser(result);
       setIsLoggedIn(true);
+      console.log("isLoggedIn:", isLoggedIn);
 
       router.replace("/home");
     } catch (error) {

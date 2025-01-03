@@ -1,5 +1,11 @@
-import React from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import React, { useEffect } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  BackHandler,
+} from "react-native";
 import { Link, router, Redirect } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "expo-image";
@@ -7,9 +13,9 @@ import { StatusBar } from "react-native";
 import { useGlobalContext } from "@/context/GlobalProvider";
 
 export default function WelcomeScreen() {
-  const { isLoading, isLoggedin } = useGlobalContext();
+  const { isLoading, isLoggedIn } = useGlobalContext();
 
-  if (!isLoading && isLoggedin) return <Redirect href="/home" />;
+  if (!isLoading && isLoggedIn) return <Redirect href="/home" />;
 
   return (
     <View className="flex-1">
