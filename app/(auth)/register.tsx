@@ -17,8 +17,11 @@ import { KeyboardAvoidingView } from "react-native";
 import { ScrollView } from "react-native";
 
 import { createUser } from "../../lib/appwrite";
+import { useGlobalContext } from "../../context/GlobalProvider";
 
 export default function RegisterScreen() {
+  const { setUser, setIsLoggedIn } = useGlobalContext();
+
   const [form, setform] = useState({
     username: "",
     email: "",
@@ -36,6 +39,8 @@ export default function RegisterScreen() {
 
     try {
       const result = await createUser(form.email, form.password, form.username);
+      setUser(result);
+      setIsLoggedIn(true);
 
       //SOMETHING HERE LATER
       router.replace("/home");

@@ -16,6 +16,7 @@ import * as SystemUI from "expo-system-ui";
 import "../global.css";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import GlobalProvider from "../context/GlobalProvider";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -52,17 +53,19 @@ export default function RootLayout() {
   NavigationBar.setBackgroundColorAsync("#ffffff01");
 
   return (
-    <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      <Stack.Screen
-        name="(auth)"
-        options={{ headerShown: false, animation: "fade" }}
-      />
-      <Stack.Screen
-        name="index"
-        options={{ headerShown: false, animation: "fade" }}
-      />
-      <Stack.Screen name="+not-found" options={{ headerShown: false }} />
-    </Stack>
+    <GlobalProvider>
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="(auth)"
+          options={{ headerShown: false, animation: "fade" }}
+        />
+        <Stack.Screen
+          name="index"
+          options={{ headerShown: false, animation: "fade" }}
+        />
+        <Stack.Screen name="+not-found" options={{ headerShown: false }} />
+      </Stack>
+    </GlobalProvider>
   );
 }

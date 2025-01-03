@@ -4,8 +4,13 @@ import { Link, router, Redirect } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "expo-image";
 import { StatusBar } from "react-native";
+import { useGlobalContext } from "@/context/GlobalProvider";
 
 export default function WelcomeScreen() {
+  const { isLoading, isLoggedin } = useGlobalContext();
+
+  if (!isLoading && isLoggedin) return <Redirect href="/home" />;
+
   return (
     <View className="flex-1">
       <StatusBar

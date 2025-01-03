@@ -1,4 +1,10 @@
-import { Image, Platform, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  Alert,
+  Image,
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { Text } from "react-native";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -10,13 +16,38 @@ import SubmitButton from "@/components/SubmitButton";
 import { ImageBackground } from "react-native";
 import { KeyboardAvoidingView } from "react-native";
 
+import { getCurrentUser, signIn } from "../../lib/appwrite";
+import { useGlobalContext } from "../../context/GlobalProvider";
+
 export default function LoginScreen() {
+  const { setUser, setIsLoggedIn } = useGlobalContext();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [form, setform] = useState({
     email: "",
     password: "",
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const submit = () => {};
+
+  const submit = async () => {
+    if (!form.email || !form.password) {
+      Alert.alert("Error", "Please fill in all fields");
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      await signIn(form.email, form.password);
+      const result = await getCurrentUser();
+
+      setUser(result);
+      setIsLoggedIn(true);
+
+      router.replace("/home");
+    } catch (error) {
+      Alert.alert("Error while creating user, submit function");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-black">
@@ -24,7 +55,7 @@ export default function LoginScreen() {
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <View className="flex-1 mx-3 justify-center">
+        <View style={styles.logoContainer}>
           <Image
             source={require("@/assets/images/Logo-icon.png")}
             style={styles.logo}
@@ -93,10 +124,12 @@ const styles = StyleSheet.create({
   logo: {
     width: 70,
     height: 70,
-    justifyContent: "center",
+    marginBottom: 50,
+  },
+  logoContainer: {
+    flex: 1,
+    justifyContent: "flex-end",
     alignItems: "center",
-    alignSelf: "center",
-    marginTop: 50,
   },
 });
 
