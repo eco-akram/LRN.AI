@@ -65,7 +65,7 @@ export default function RegisterScreen() {
             />
           </View>
 
-          <View className="flex-1 mx-3 justify-center">
+          <View className="flex-1 mx-3 justify-items-start">
             <View className="mb-5">
               <Text className="text-white text-center font-bold text-2xl">
                 Create an account, it's free!
