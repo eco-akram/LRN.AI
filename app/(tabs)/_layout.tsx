@@ -49,6 +49,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="ai"
           options={{
+            animation: "fade",
             title: "Ai",
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
@@ -64,6 +65,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="home"
           options={{
+            animation: "fade",
             title: "Home",
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
@@ -79,6 +81,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="decks"
           options={{
+            animation: "fade",
             title: "Decks",
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (

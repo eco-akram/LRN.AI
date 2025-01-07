@@ -7,20 +7,31 @@ const DeckListDeck: React.FC<{ deck: string; count: number }> = ({
   count,
 }) => (
   <View className="mb-2">
-    <View className="flex-row items-center justify-start gap-2">
-      <Image
-        source={icons.StackOfCards}
-        resizeMode="contain"
-        style={styles.icon}
-      />
+    <View className="flex-row justify-between items-center">
+      <View className="flex-row items-center gap-2">
+        <Image
+          source={icons.StackOfCards}
+          resizeMode="contain"
+          style={styles.icon}
+        />
+        <View>
+          <Text className="text-white text-xl font-light">{deck}</Text>
+          <Text className="text-gray-500 font-semibold leading-tight">
+            {count} cards
+          </Text>
+        </View>
+      </View>
       <View>
-        <Text className="text-white text-xl font-light mt-3">{deck}</Text>
-        <Text className="text-gray-500 font-semibold mb-2 leading-tight">
-          {count} cards
-        </Text>
+        <TouchableOpacity onPress={() => console.log("Edit deck")}>
+          <Image
+            source={icons.DotsIcon}
+            resizeMode="contain"
+            style={styles.icon}
+          />
+        </TouchableOpacity>
       </View>
     </View>
-    <View className="border-t-2 border-gray-500" />
+    <View className="border-t-2 border-gray-500 mt-2" />
   </View>
 );
 
@@ -28,7 +39,6 @@ const styles = StyleSheet.create({
   icon: {
     width: 30,
     height: 30,
-    marginRight: 5,
   },
 });
 

@@ -6,6 +6,10 @@ import DecksIcon from "../assets/icons/DecksIcon.png";
 import HomeIcon from "../assets/icons/HomeIcon.png";
 import StackOfCards from "../assets/icons/StackOfCards-icon.png";
 import PlusIcon from "../assets/icons/PlusIcon.png";
+import DotsIcon from "../assets/icons/DotsIcon.png";
+import EditIcon from "../assets/icons/EditIcon.png";
+import DeleteIcon from "../assets/icons/DeleteIcon.png";
+import ArrowCardIcon from "../assets/icons/ArrowCardIcon.png";
 
 export default {
   profile,
@@ -16,4 +20,8 @@ export default {
   HomeIcon,
   StackOfCards,
   PlusIcon,
+  DotsIcon,
+  EditIcon,
+  DeleteIcon,
+  ArrowCardIcon,
 };

@@ -8,6 +8,7 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getDeckCardsList } from "@/lib/appwrite"; // Adjust the import path as needed
@@ -15,8 +16,6 @@ import { useGlobalContext } from "@/context/GlobalProvider";
 import DeckListCards from "@/components/DeckListCards";
 import DeckListDeck from "@/components/DeckListDeck";
 import icons from "@/constants/icons";
-
-//TODO: CREATE GLOBAL LOADER
 
 interface Deck {
   deckName: string;
@@ -54,7 +53,7 @@ export default function Decks() {
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
-        <Text>Loading...</Text>
+        <ActivityIndicator size={"large"} />
       </SafeAreaView>
     );
   }
@@ -76,12 +75,12 @@ export default function Decks() {
           sections={decksCards.map((deck) => ({
             title: deck.deckName,
             data: deck.cards,
-            cardCount: deck.cards.length, // Add cardCount here
+            cardCount: deck.cards.length,
           }))}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => <DeckListCards card={item} />}
           renderSectionHeader={({ section: { title, cardCount } }) => (
-            <DeckListDeck deck={title} count={cardCount} /> // Use cardCount directly
+            <DeckListDeck deck={title} count={cardCount} />
           )}
         />
       </View>
