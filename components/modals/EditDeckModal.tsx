@@ -11,7 +11,8 @@ const EditDeckModal: React.FC<{
   onBack: () => void; // New Back Prop
   deckId: string;
   deckName: string;
-}> = ({ isVisible, onClose, onBack, deckId, deckName }) => {
+  refreshData: () => void;
+}> = ({ isVisible, onClose, onBack, deckId, deckName, refreshData }) => {
   const [newDeckName, setNewDeckName] = useState(deckName);
 
   const handleSaveChanges = async () => {
@@ -22,6 +23,7 @@ const EditDeckModal: React.FC<{
 
     try {
       await editDeck(deckId, newDeckName);
+      refreshData();
       console.log(`Edit Deck: ${deckId}, New Name: ${newDeckName}`);
       onClose();
     } catch (error) {

@@ -13,10 +13,12 @@ const DeleteDeckModal: React.FC<{
   onBack: () => void; // Back Prop for navigation
   deckId: string;
   deckName: string;
-}> = ({ isVisible, onClose, onBack, deckId, deckName }) => {
+  refreshData: () => void;
+}> = ({ isVisible, onClose, onBack, deckId, deckName, refreshData }) => {
   const handleDelete = async () => {
     try {
       await deleteDeckWithCards(deckId);
+      refreshData();
       console.log(`Deleting Deck: ${deckId}`);
       onClose();
     } catch (error) {

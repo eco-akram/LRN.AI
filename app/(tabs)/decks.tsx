@@ -32,6 +32,18 @@ export default function Decks() {
   const [isModalVisible, setModalVisible] = useState(false);
   const [newDeckName, setNewDeckName] = useState("");
 
+  const fetchDecks = async () => {
+    setLoading(true);
+    try {
+      const deckList = await getDeckCardsList(user.$id);
+      setDecksCards(deckList);
+    } catch (error) {
+      console.log("Error fetching decks", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     const fetchDecks = async () => {
       try {
@@ -47,6 +59,10 @@ export default function Decks() {
     fetchDecks();
   }, []);
 
+  /*  useEffect(() => {
+    fetchDecks(); // Trigger fetch whenever a change happens
+  }, [decksCards]); // Refetch when decks/cards change
+ */
   const handleAddDeck = async () => {
     if (newDeckName.trim() === "") {
       alert("Please enter a deck name!");
@@ -106,6 +122,7 @@ export default function Decks() {
               deckName={title}
               deckId={deckId}
               cardCount={cardCount}
+              refreshData={fetchDecks}
             />
           )}
         />

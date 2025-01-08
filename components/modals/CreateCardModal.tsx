@@ -10,13 +10,13 @@ const CreateCardModal: React.FC<{
   onClose: () => void;
   onBack: () => void; // New Back Prop
   deckId: string;
-}> = ({ isVisible, onClose, onBack, deckId }) => {
+  refreshData: () => void;
+}> = ({ isVisible, onClose, onBack, deckId, refreshData }) => {
   const [newCardName, setNewCardName] = useState("");
   const [newCardFrontText, setNewCardFrontText] = useState("");
   const [newCardBackText, setNewCardBackText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  setIsLoading(true);
   const handleCreateCard = async () => {
     if (newCardName.trim() === "") {
       alert("Please enter the card name!");
@@ -31,12 +31,13 @@ const CreateCardModal: React.FC<{
       return;
     }
 
+    setIsLoading(true);
+
     try {
-      const newCard = await createCard(
-        deckId,
-        newCardName,
-        newCardFrontText,
-        newCardBackText,
+      await createCard(deckId, newCardName, newCardFrontText, newCardBackText);
+      refreshData();
+      console.log(
+        `Deck id for the card: ${deckId}, Card Name: ${newCardName}, Front Text: ${newCardFrontText}, Back Text: ${newCardBackText}`,
       );
     } catch (error) {
       console.error("Error creating card:", error);
@@ -45,9 +46,6 @@ const CreateCardModal: React.FC<{
       setIsLoading(false);
     }
 
-    console.log(
-      `Deck id for the card: ${deckId}, Card Name: ${newCardName}, Front Text: ${newCardFrontText}, Back Text: ${newCardBackText}`,
-    );
     onClose();
   };
 

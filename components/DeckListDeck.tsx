@@ -13,7 +13,8 @@ const DeckListDeck: React.FC<{
   deckName: string;
   deckId: string;
   cardCount: number;
-}> = ({ deckName, deckId, cardCount }) => {
+  refreshData: () => void;
+}> = ({ deckName, deckId, cardCount, refreshData }) => {
   const [isOptionsModalVisible, setOptionsModalVisible] = useState(false);
   const [isEditDeckVisible, setEditDeckVisible] = useState(false);
   const [isCreateCardVisible, setCreateCardVisible] = useState(false);
@@ -96,6 +97,7 @@ const DeckListDeck: React.FC<{
         onBack={backToOptionsModal}
         deckId={deckId}
         deckName={deckName}
+        refreshData={refreshData}
       />
       {/* Create Card Modal with Back Button */}
       <CreateCardModal
@@ -103,6 +105,7 @@ const DeckListDeck: React.FC<{
         onClose={() => setCreateCardVisible(false)}
         onBack={backToOptionsModal}
         deckId={deckId}
+        refreshData={refreshData}
       />
       {/* DeleteDeckModal */}
       <DeleteDeckModal
@@ -111,6 +114,7 @@ const DeckListDeck: React.FC<{
         onBack={backToOptionsModal}
         deckId={deckId}
         deckName={deckName}
+        refreshData={refreshData}
       />
     </View>
   );
