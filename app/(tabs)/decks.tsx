@@ -36,7 +36,6 @@ export default function Decks() {
     const fetchDecks = async () => {
       try {
         const deckList = await getDeckCardsList(user.$id);
-
         setDecksCards(deckList);
       } catch (error) {
         console.log("Error fetching decks", error);
@@ -114,11 +113,11 @@ export default function Decks() {
 
       <Modal
         isVisible={isModalVisible}
-        onBackdropPress={() => setModalVisible(false)} // Close modal on backdrop press
-        onSwipeComplete={() => setModalVisible(false)} // Close modal on swipe down
+        onBackdropPress={() => setModalVisible(false)}
+        onSwipeComplete={() => setModalVisible(false)}
         swipeDirection="down"
         style={styles.modal}
-        onBackButtonPress={() => setModalVisible(false)} // Close modal on back button press
+        onBackButtonPress={() => setModalVisible(false)}
       >
         <View style={styles.modalContent}>
           <Text className="font-SegoeuiBold text-2xl text-white mb-5">
