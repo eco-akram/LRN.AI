@@ -3,19 +3,20 @@ import {
   StyleSheet,
   Text,
   View,
-  Button,
   SectionList,
-  ScrollView,
   TouchableOpacity,
-  ActivityIndicator,
+  TextInput,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getDeckCardsList } from "@/lib/appwrite";
+import { getDeckCardsList, createDeck } from "@/lib/appwrite";
 import { useGlobalContext } from "@/context/GlobalProvider";
 import DeckListCards from "@/components/DeckListCards";
 import DeckListDeck from "@/components/DeckListDeck";
 import icons from "@/constants/icons";
 import { Image } from "expo-image";
+import Loading from "@/components/Loading";
+import Modal from "react-native-modal";
+import PrimaryButton from "@/components/PrimaryButton";
 
 interface Deck {
   deckId: string;
@@ -47,30 +48,45 @@ export default function Decks() {
     fetchDecks();
   }, []);
 
-  const getCardCount = (deck: Deck) => deck.cards.length;
+  const handleAddDeck = async () => {
+    if (newDeckName.trim() === "") {
+      alert("Please enter a deck name!");
+      return;
+    }
+
+    try {
+      const newDeck = await createDeck(user.$id, newDeckName);
+
+      setDecksCards((prev) => [
+        ...prev,
+        {
+          deckId: newDeck.$id,
+          deckName: newDeck.deckName,
+          cards: [],
+        },
+      ]);
+
+      setNewDeckName("");
+      setModalVisible(false);
+    } catch (error) {
+      console.error("Error adding deck:", error);
+      alert("Failed to add deck. Please try again.");
+    }
+  };
 
   useEffect(() => {
     console.log(decksCards);
   }, [decksCards]);
 
   if (loading) {
-    return (
-      <SafeAreaView className="flex-1 bg-black items-center justify-center">
-        {/* <ActivityIndicator size={"large"} /> */}
-        <Image
-          source={require("../../assets/loaderGif.gif")}
-          contentFit="cover"
-          style={{ width: 80, height: 40 }}
-        />
-      </SafeAreaView>
-    );
+    return <Loading />;
   }
 
   return (
     <SafeAreaView className="flex-1 bg-black">
       <View className="flex-row m-5 items-center justify-between">
         <Text className="text-white font-SegoeuiBold text-2xl">Your Decks</Text>
-        <TouchableOpacity onPress={() => console.log("Add deck")}>
+        <TouchableOpacity onPress={() => setModalVisible(true)}>
           <Image source={icons.PlusIcon} style={styles.icon} />
         </TouchableOpacity>
       </View>
@@ -95,6 +111,29 @@ export default function Decks() {
           )}
         />
       </View>
+
+      <Modal
+        isVisible={isModalVisible}
+        onBackdropPress={() => setModalVisible(false)} // Close modal on backdrop press
+        onSwipeComplete={() => setModalVisible(false)} // Close modal on swipe down
+        swipeDirection="down"
+        style={styles.modal}
+        onBackButtonPress={() => setModalVisible(false)} // Close modal on back button press
+      >
+        <View style={styles.modalContent}>
+          <Text className="font-SegoeuiBold text-2xl text-white mb-5">
+            Add New Deck
+          </Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter deck name"
+            placeholderTextColor="#999"
+            value={newDeckName}
+            onChangeText={(text) => setNewDeckName(text)}
+          />
+          <PrimaryButton onPress={handleAddDeck} title="Add Deck" />
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -122,5 +161,24 @@ const styles = StyleSheet.create({
     height: 30,
     maxHeight: 30,
     maxWidth: 30,
+  },
+  modal: {
+    justifyContent: "flex-end",
+    margin: 0,
+  },
+  modalContent: {
+    backgroundColor: "#1E1E1E",
+    padding: 20,
+    borderTopLeftRadius: 15,
+    borderTopRightRadius: 15,
+    alignItems: "center",
+  },
+  input: {
+    width: "100%",
+    backgroundColor: "#333",
+    borderRadius: 10,
+    padding: 10,
+    color: "white",
+    marginBottom: 15,
   },
 });

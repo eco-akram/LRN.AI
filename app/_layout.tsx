@@ -18,6 +18,8 @@ import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import GlobalProvider from "../context/GlobalProvider";
 
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
@@ -57,19 +59,21 @@ export default function RootLayout() {
   NavigationBar.setBackgroundColorAsync("#ffffff01");
 
   return (
-    <GlobalProvider>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="(auth)"
-          options={{ headerShown: false, animation: "fade" }}
-        />
-        <Stack.Screen
-          name="index"
-          options={{ headerShown: false, animation: "fade" }}
-        />
-        <Stack.Screen name="+not-found" options={{ headerShown: false }} />
-      </Stack>
-    </GlobalProvider>
+    <GestureHandlerRootView>
+      <GlobalProvider>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen
+            name="(auth)"
+            options={{ headerShown: false, animation: "fade" }}
+          />
+          <Stack.Screen
+            name="index"
+            options={{ headerShown: false, animation: "fade" }}
+          />
+          <Stack.Screen name="+not-found" options={{ headerShown: false }} />
+        </Stack>
+      </GlobalProvider>
+    </GestureHandlerRootView>
   );
 }
