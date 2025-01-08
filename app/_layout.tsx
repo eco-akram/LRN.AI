@@ -33,6 +33,10 @@ export default function RootLayout() {
 
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    Segoeui: require("../assets/fonts/segoeui.otf"),
+    SegoeuiBold: require("../assets/fonts/segoeuiBold.otf"),
+    SegoeuiBlack: require("../assets/fonts/segoeuiBlack.otf"),
+    SegoeuiLight: require("../assets/fonts/segoeuiLight.otf"),
   });
 
   useEffect(() => {

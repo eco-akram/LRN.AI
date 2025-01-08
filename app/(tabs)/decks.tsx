@@ -6,20 +6,21 @@ import {
   Button,
   SectionList,
   ScrollView,
-  Image,
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getDeckCardsList } from "@/lib/appwrite"; // Adjust the import path as needed
+import { getDeckCardsList } from "@/lib/appwrite";
 import { useGlobalContext } from "@/context/GlobalProvider";
 import DeckListCards from "@/components/DeckListCards";
 import DeckListDeck from "@/components/DeckListDeck";
 import icons from "@/constants/icons";
+import { Image } from "expo-image";
 
 interface Deck {
+  deckId: string;
   deckName: string;
-  cards: string[];
+  cards: { cardId: string; cardName: string }[];
 }
 
 export default function Decks() {
@@ -27,6 +28,8 @@ export default function Decks() {
 
   const [decksCards, setDecksCards] = useState<Deck[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [newDeckName, setNewDeckName] = useState("");
 
   useEffect(() => {
     const fetchDecks = async () => {
@@ -52,8 +55,13 @@ export default function Decks() {
 
   if (loading) {
     return (
-      <SafeAreaView style={styles.container}>
-        <ActivityIndicator size={"large"} />
+      <SafeAreaView className="flex-1 bg-black items-center justify-center">
+        {/* <ActivityIndicator size={"large"} /> */}
+        <Image
+          source={require("../../assets/loaderGif.gif")}
+          contentFit="cover"
+          style={{ width: 80, height: 40 }}
+        />
       </SafeAreaView>
     );
   }
@@ -61,26 +69,29 @@ export default function Decks() {
   return (
     <SafeAreaView className="flex-1 bg-black">
       <View className="flex-row m-5 items-center justify-between">
-        <Text className="text-white text-2xl">Your Decks</Text>
+        <Text className="text-white font-SegoeuiBold text-2xl">Your Decks</Text>
         <TouchableOpacity onPress={() => console.log("Add deck")}>
-          <Image
-            source={icons.PlusIcon}
-            resizeMode="contain"
-            style={styles.icon}
-          />
+          <Image source={icons.PlusIcon} style={styles.icon} />
         </TouchableOpacity>
       </View>
       <View className="m-5">
         <SectionList
           sections={decksCards.map((deck) => ({
             title: deck.deckName,
+            deckId: deck.deckId,
             data: deck.cards,
             cardCount: deck.cards.length,
           }))}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item }) => <DeckListCards card={item} />}
-          renderSectionHeader={({ section: { title, cardCount } }) => (
-            <DeckListDeck deck={title} count={cardCount} />
+          renderItem={({ item, section }) => (
+            <DeckListCards card={item} deckId={section.deckId} />
+          )}
+          renderSectionHeader={({ section: { title, deckId, cardCount } }) => (
+            <DeckListDeck
+              deckName={title}
+              deckId={deckId}
+              cardCount={cardCount}
+            />
           )}
         />
       </View>
