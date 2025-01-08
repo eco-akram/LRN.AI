@@ -14,7 +14,9 @@ const CreateCardModal: React.FC<{
   const [newCardName, setNewCardName] = useState("");
   const [newCardFrontText, setNewCardFrontText] = useState("");
   const [newCardBackText, setNewCardBackText] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
+  setIsLoading(true);
   const handleCreateCard = async () => {
     if (newCardName.trim() === "") {
       alert("Please enter the card name!");
@@ -39,6 +41,8 @@ const CreateCardModal: React.FC<{
     } catch (error) {
       console.error("Error creating card:", error);
       alert("Failed to create card. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
 
     console.log(

@@ -3,6 +3,7 @@ import { View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import Modal from "react-native-modal";
 import { Text } from "react-native";
 import PrimaryButton from "../PrimaryButton";
+import { editDeck } from "@/lib/appwrite";
 
 const EditDeckModal: React.FC<{
   isVisible: boolean;
@@ -13,9 +14,20 @@ const EditDeckModal: React.FC<{
 }> = ({ isVisible, onClose, onBack, deckId, deckName }) => {
   const [newDeckName, setNewDeckName] = useState(deckName);
 
-  const handleSaveChanges = () => {
-    console.log(`Edit Deck: ${deckId}, New Name: ${newDeckName}`);
-    onClose();
+  const handleSaveChanges = async () => {
+    if (newDeckName.trim() === "") {
+      alert("Please enter a deck name!");
+      return;
+    }
+
+    try {
+      await editDeck(deckId, newDeckName);
+      console.log(`Edit Deck: ${deckId}, New Name: ${newDeckName}`);
+      onClose();
+    } catch (error) {
+      console.error("Error editing deck:", error);
+      alert("Failed to edit deck. Please try again.");
+    }
   };
 
   return (

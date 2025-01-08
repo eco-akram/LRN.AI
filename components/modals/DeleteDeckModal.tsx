@@ -5,6 +5,7 @@ import { Text } from "react-native";
 import PrimaryButton from "../PrimaryButton";
 import SecondaryButton from "../SecondaryButton";
 import DangerButton from "../DangerButton";
+import { deleteDeckWithCards } from "@/lib/appwrite";
 
 const DeleteDeckModal: React.FC<{
   isVisible: boolean;
@@ -13,9 +14,15 @@ const DeleteDeckModal: React.FC<{
   deckId: string;
   deckName: string;
 }> = ({ isVisible, onClose, onBack, deckId, deckName }) => {
-  const handleDelete = () => {
-    console.log(`Deleting Deck: ${deckId}`);
-    onClose();
+  const handleDelete = async () => {
+    try {
+      await deleteDeckWithCards(deckId);
+      console.log(`Deleting Deck: ${deckId}`);
+      onClose();
+    } catch (error) {
+      console.error("Error deleting deck:", error);
+      alert("Failed to delete deck. Please try again.");
+    }
   };
 
   return (
