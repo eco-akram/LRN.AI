@@ -5,6 +5,12 @@ module.exports = {
   presets: [require("nativewind/preset")],
   theme: {
     extend: {
+      colors: {
+        primaryBg: "#141414",
+        secondaryBG: "#1E1E1E",
+        secondary: "#999",
+        danger: "#f43f5e",
+      },
       fontFamily: {
         Segoeui: ["Segoeui", "sans-serif"],
         SegoeuiLight: ["SegoeuiLight", "sans-serif"],
