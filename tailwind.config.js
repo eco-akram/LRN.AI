@@ -4,7 +4,21 @@ module.exports = {
   content: ["./app/**/*.{js,jsx,ts,tsx}", "./components/**/*.{js,jsx,ts,tsx}"],
   presets: [require("nativewind/preset")],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primaryBg: "#141414",
+        secondaryBG: "#1E1E1E",
+        secondary: "#999",
+        accent: "#A65EE6",
+        danger: "#f43f5e",
+      },
+      fontFamily: {
+        Segoeui: ["Segoeui", "sans-serif"],
+        SegoeuiLight: ["SegoeuiLight", "sans-serif"],
+        SegoeuiBold: ["SegoeuiBold", "sans-serif"],
+        SegoeuiBlack: ["SegoeuiBlack", "sans-serif"],
+      },
+    },
   },
   plugins: [],
 };

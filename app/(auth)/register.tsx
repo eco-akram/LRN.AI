@@ -12,7 +12,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import FormField from "@/components/FormField";
 import { Link, router } from "expo-router";
 import { useState } from "react";
-import SubmitButton from "@/components/SubmitButton";
+import SubmitButton from "@/components/buttons/SubmitButton";
 import { KeyboardAvoidingView } from "react-native";
 import { ScrollView } from "react-native";
 
@@ -65,7 +65,7 @@ export default function RegisterScreen() {
             />
           </View>
 
-          <View className="flex-1 mx-3 justify-center">
+          <View className="flex-1 mx-3 justify-items-start">
             <View className="mb-5">
               <Text className="text-white text-center font-bold text-2xl">
                 Create an account, it's free!

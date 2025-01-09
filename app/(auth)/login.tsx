@@ -12,7 +12,7 @@ import FormField from "@/components/FormField";
 import { Link, router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
-import SubmitButton from "@/components/SubmitButton";
+import SubmitButton from "@/components/buttons/SubmitButton";
 import { ImageBackground } from "react-native";
 import { KeyboardAvoidingView } from "react-native";
 

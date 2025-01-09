@@ -1,8 +1,3 @@
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -15,8 +10,10 @@ import * as SystemUI from "expo-system-ui";
 
 import "../global.css";
 import { View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import GlobalProvider from "../context/GlobalProvider";
+
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { ModalProvider } from "@/context/ModalContext";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -33,6 +30,10 @@ export default function RootLayout() {
 
   const [loaded] = useFonts({
     SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+    Segoeui: require("../assets/fonts/segoeui.otf"),
+    SegoeuiBold: require("../assets/fonts/segoeuiBold.otf"),
+    SegoeuiBlack: require("../assets/fonts/segoeuiBlack.otf"),
+    SegoeuiLight: require("../assets/fonts/segoeuiLight.otf"),
   });
 
   useEffect(() => {
@@ -53,19 +54,23 @@ export default function RootLayout() {
   NavigationBar.setBackgroundColorAsync("#ffffff01");
 
   return (
-    <GlobalProvider>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen
-          name="(auth)"
-          options={{ headerShown: false, animation: "fade" }}
-        />
-        <Stack.Screen
-          name="index"
-          options={{ headerShown: false, animation: "fade" }}
-        />
-        <Stack.Screen name="+not-found" options={{ headerShown: false }} />
-      </Stack>
-    </GlobalProvider>
+    <GestureHandlerRootView>
+      <GlobalProvider>
+        <ModalProvider>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="(auth)"
+              options={{ headerShown: false, animation: "fade" }}
+            />
+            <Stack.Screen
+              name="index"
+              options={{ headerShown: false, animation: "fade" }}
+            />
+            <Stack.Screen name="+not-found" options={{ headerShown: false }} />
+          </Stack>
+        </ModalProvider>
+      </GlobalProvider>
+    </GestureHandlerRootView>
   );
 }
