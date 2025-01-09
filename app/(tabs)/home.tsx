@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+/* eslint-disable prettier/prettier */
+import React, { useState, useEffect, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import {
   FlatList,
   RefreshControl,
@@ -26,6 +28,7 @@ import useAppwrite from "@/lib/useAppwrite";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import DangerButton from "@/components/buttons/DangerButton";
 import FormInput from "@/components/buttons/FormInput";
+import DeckListHome from "@/components/DeckListHome";
 
 export default function Home() {
   const { user, setUser } = useGlobalContext();
@@ -60,6 +63,12 @@ export default function Home() {
     setRefreshing(false);
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      refetch(); // Refetch decks when screen is focused
+    }, [refetch])
+  );
+
   const handleLogout = async () => {
     try {
       await signOut();
@@ -74,16 +83,14 @@ export default function Home() {
   const handleChangeUsername = async () => {
     try {
       if (newUsername.trim() === "") {
-        await setConfirmation("Please write a new username.");
+        setConfirmation("Please write a new username.");
         return;
       } else if (newUsername === user.username) {
-        await setConfirmation("Please write a different username.");
+        setConfirmation("Please write a different username.");
         return;
       }
-      console.log("User ID:", user.$id);
-      console.log("New Username:", newUsername);
       await changeUserName(user.$id, newUsername);
-      await setConfirmation("Username changed successfully!");
+      setConfirmation("Username changed successfully!");
       setNewUsername("");
       await refetch();
       setUser((prevUser: User) => ({ ...prevUser, username: newUsername }));
@@ -96,9 +103,7 @@ export default function Home() {
   useEffect(() => {
     if (settingsVisible) {
       setNewUsername("");
-      setConfirmation(
-        "Tip: Keep it simple and unique—usernames help you stand out."
-      );
+      setConfirmation("Tip: Keep it simple and unique—usernames help you stand out.");
     }
   }, [settingsVisible]);
 
@@ -129,7 +134,7 @@ export default function Home() {
 
         {/* Streak and Stats Section */}
         <View className="flex-row justify-between mb-5">
-          <View className="bg-layer2 justify-center justify-items-center rounded-xl p-5 flex-2 mr-2">
+          <View className="bg-layer2 justify-center rounded-xl p-5 flex-2 mr-2">
             <Text className="text-xl font-SegoeuiBold text-white">Streak</Text>
             <Text className="text-2xl font-SegoeuiBold text-white">🔥 7</Text>
           </View>
@@ -145,9 +150,7 @@ export default function Home() {
 
         {/* AI Creation Section */}
         <View className="mb-5">
-          <Text className="text-xl font-SegoeuiBold text-white mb-3">
-            Get started
-          </Text>
+          <Text className="text-xl font-SegoeuiBold text-white mb-3">Get started</Text>
           <TouchableOpacity className="rounded-2xl overflow-hidden border-2 border-secondaryBG">
             <LinearGradient
               colors={["#A65EE6", "#000000"]}
@@ -156,9 +159,7 @@ export default function Home() {
               className="rounded-lg"
             >
               <View className="flex flex-row justify-between items-center px-6">
-                <Text className="text-xl text-white font-Segoeui py-7">
-                  Study for today
-                </Text>
+                <Text className="text-xl text-white font-Segoeui py-7">Study for today</Text>
                 <Image source={icons.ArrowTopRight} style={styles.iconArrow} />
               </View>
             </LinearGradient>
@@ -166,28 +167,25 @@ export default function Home() {
         </View>
 
         <View>
-          <Text className="text-xl font-SegoeuiBold text-white mb-3">
-            Your Decks
-          </Text>
+          <Text className="text-xl font-SegoeuiBold text-white mb-3">Your Decks</Text>
         </View>
 
         {/* Deck List */}
         <View className="flex-1 w-full bg-layer2 rounded-xl p-5">
           <FlatList
-            className="flex-1 rounded-lg w-full" // Full height and width
+            className="flex-1 rounded-lg w-full"
             contentContainerStyle={{ paddingBottom: 20 }}
-            data={decks as { deckName: string; deckId: string }[]}
-            keyExtractor={(item) => item.deckName}
+            data={decks as { deckName: string; $id: string }[]}
+            keyExtractor={(item) => item.$id}
             renderItem={({ item }) => (
-              <View className="bg-layer3 p-4 rounded-lg mb-2">
-                <Text className="text-lg text-white">{item.deckName}</Text>
-                <Text className="text-sm text-gray-400">{item.deckId}</Text>
-              </View>
+              <DeckListHome
+                deckName={item.deckName}
+                deckId={item.$id}
+                triggerRefresh={onRefresh} // Pass refresh to the child
+              />
             )}
             ListEmptyComponent={() => (
-              <Text className="text-center text-white mt-5">
-                No decks available
-              </Text>
+              <Text className="text-center text-white mt-5">No decks available</Text>
             )}
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -203,23 +201,18 @@ export default function Home() {
         onSwipeComplete={() => setSettingsVisible(false)}
         onBackButtonPress={() => setSettingsVisible(false)}
       >
-        <View className="flex-1 justify-center items-center ">
+        <View className="flex-1 justify-center items-center">
           <View className="rounded-3xl bg-layer2 w-full p-5">
             <View className="flex-row justify-between items-center mb-5">
-              <Text className="text-xl font-SegoeuiBold text-white">
-                Settings
-              </Text>
+              <Text className="text-xl font-SegoeuiBold text-white">Settings</Text>
               <TouchableOpacity onPress={() => setSettingsVisible(false)}>
                 <Ionicons name="close" size={24} color="white" />
               </TouchableOpacity>
             </View>
             <View className="mb-3">
-              <Text className="text-lg font-Segoeui text-white mb-2">
-                Change Username
-              </Text>
+              <Text className="text-lg font-Segoeui text-white mb-2">Change Username</Text>
               <Text className="text-secondary bg-layer3 p-2 rounded-lg mt-1 mb-2">
-                Personalize your profile by updating your display name. This is
-                how it will appear throughout the app
+                Personalize your profile by updating your display name. This is how it will appear throughout the app.
               </Text>
               <FormInput
                 value={newUsername}
@@ -227,18 +220,11 @@ export default function Home() {
                 handleChangeText={setNewUsername}
               />
               <Text className="text-secondary mb-5">{confirmation}</Text>
-              <PrimaryButton
-                title="Save Changes"
-                onPress={handleChangeUsername}
-              />
+              <PrimaryButton title="Save Changes" onPress={handleChangeUsername} />
               <DangerButton title="Log out" onPress={handleLogout} />
               <View className="flex flex-row justify-evenly mt-5">
-                <Text className="font-Segoeui text-secondary w-1/2">
-                  Terms of service
-                </Text>
-                <Text className="font-Segoeui text-secondary w-1/3">
-                  Privacy Policy
-                </Text>
+                <Text className="font-Segoeui text-secondary w-1/2">Terms of service</Text>
+                <Text className="font-Segoeui text-secondary w-1/3">Privacy Policy</Text>
               </View>
             </View>
           </View>

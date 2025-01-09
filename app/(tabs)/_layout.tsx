@@ -1,6 +1,6 @@
 import { Tabs } from "expo-router";
 import React from "react";
-import { Platform, View, Text, Image } from "react-native";
+import { View, Text, Image } from "react-native";
 import icons from "@/constants/icons";
 import { StatusBar } from "expo-status-bar";
 

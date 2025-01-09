@@ -1,6 +1,4 @@
-import { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Image } from "react-native";
-import icons from "@/constants/icons";
+import { TextInput } from "react-native";
 
 interface FormInputProps {
   value: string;
