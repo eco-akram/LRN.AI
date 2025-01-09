@@ -18,8 +18,8 @@ const SuccessModal: React.FC<{
   }, [isVisible]);
 
   const handleContinue = () => {
-    setModalVisible(false); // Close modal locally
-    onClose(); // Call parent-provided onClose to handle any additional logic
+    setModalVisible(false);
+    onClose();
   };
 
   return (
@@ -28,12 +28,14 @@ const SuccessModal: React.FC<{
       onBackdropPress={handleContinue}
       onSwipeComplete={handleContinue}
       swipeDirection="down"
-      className="flex justify-center items-center"
+      className="flex justify-center"
       onBackButtonPress={handleContinue}
     >
-      <View className="p-4">
-        <Text>{title}</Text>
-        <Text>{subtitle}</Text>
+      <View className="p-4 bg-secondaryBG rounded-3xl items-center">
+        <Text className="font-SegoeuiBold text-white text-2xl mb-2">
+          {title}
+        </Text>
+        <Text className="font-SegoeuiBold text-secondary mb-5">{subtitle}</Text>
         <PrimaryButton title="Continue" onPress={handleContinue} />
       </View>
     </Modal>

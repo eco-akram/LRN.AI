@@ -10,6 +10,8 @@ import DotsIcon from "../assets/icons/DotsIcon.png";
 import EditIcon from "../assets/icons/EditIcon.png";
 import DeleteIcon from "../assets/icons/DeleteIcon.png";
 import ArrowCardIcon from "../assets/icons/ArrowCardIcon.png";
+import SuccessPrimary from "../assets/icons/SuccessPrimary.png";
+import SuccessWhite from "../assets/icons/SuccessWhite.png";
 
 export default {
   profile,
@@ -24,4 +26,6 @@ export default {
   EditIcon,
   DeleteIcon,
   ArrowCardIcon,
+  SuccessPrimary,
+  SuccessWhite,
 };
