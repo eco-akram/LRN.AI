@@ -4,7 +4,7 @@ import Modal from "react-native-modal";
 import { Text } from "react-native";
 import PrimaryButton from "../PrimaryButton";
 import { editDeck } from "@/lib/appwrite";
-import SuccessModal from "./SuccessModal";
+import { useSuccessModal } from "@/context/ModalContext";
 
 const EditDeckModal: React.FC<{
   isVisible: boolean;
@@ -15,7 +15,7 @@ const EditDeckModal: React.FC<{
   refreshData: () => void;
 }> = ({ isVisible, onClose, onBack, deckId, deckName, refreshData }) => {
   const [newDeckName, setNewDeckName] = useState(deckName);
-  const [isSuccessModalVisible, setSuccessModalVisible] = useState(false);
+  const { showSuccessModal } = useSuccessModal();
 
   const handleSaveChanges = async () => {
     if (newDeckName.trim() === "") {
@@ -27,8 +27,7 @@ const EditDeckModal: React.FC<{
       await editDeck(deckId, newDeckName);
 
       refreshData();
-      /* setSuccessModalVisible(true); */
-      setTimeout(() => setSuccessModalVisible(true), 1000);
+      showSuccessModal("Deck name has been updated!");
       console.log(`Edit Deck: ${deckId}, New Name: ${newDeckName}`);
 
       onClose();
@@ -62,12 +61,6 @@ const EditDeckModal: React.FC<{
           <PrimaryButton title="Save Changes" onPress={handleSaveChanges} />
         </View>
       </Modal>
-      <SuccessModal
-        isVisible={isSuccessModalVisible}
-        title="Success"
-        subtitle="Deck name has been updated!"
-        onClose={() => setSuccessModalVisible(false)}
-      />
     </View>
   );
 };

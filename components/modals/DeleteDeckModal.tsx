@@ -6,6 +6,7 @@ import PrimaryButton from "../PrimaryButton";
 import SecondaryButton from "../SecondaryButton";
 import DangerButton from "../DangerButton";
 import { deleteDeckWithCards } from "@/lib/appwrite";
+import { useSuccessModal } from "@/context/ModalContext";
 
 const DeleteDeckModal: React.FC<{
   isVisible: boolean;
@@ -15,10 +16,13 @@ const DeleteDeckModal: React.FC<{
   deckName: string;
   refreshData: () => void;
 }> = ({ isVisible, onClose, onBack, deckId, deckName, refreshData }) => {
+  const { showSuccessModal } = useSuccessModal();
+
   const handleDelete = async () => {
     try {
       await deleteDeckWithCards(deckId);
       refreshData();
+      showSuccessModal("Deck has been deleted!");
       console.log(`Deleting Deck: ${deckId}`);
       onClose();
     } catch (error) {

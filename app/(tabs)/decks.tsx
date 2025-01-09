@@ -17,7 +17,7 @@ import { Image } from "expo-image";
 import Loading from "@/components/Loading";
 import Modal from "react-native-modal";
 import PrimaryButton from "@/components/PrimaryButton";
-import SuccessModal from "@/components/modals/SuccessModal";
+import { useSuccessModal } from "@/context/ModalContext";
 
 interface Deck {
   deckId: string;
@@ -33,9 +33,7 @@ export default function Decks() {
   const [isModalVisible, setModalVisible] = useState(false);
   const [newDeckName, setNewDeckName] = useState("");
 
-  const [isSuccessModalVisible, setSuccessModalVisible] = useState(false);
-  const [successMessage, setSuccessMessage] = useState("");
-
+  const { showSuccessModal } = useSuccessModal();
   const fetchDecks = async () => {
     setLoading(true);
     try {
@@ -89,11 +87,6 @@ export default function Decks() {
       console.error("Error adding deck:", error);
       alert("Failed to add deck. Please try again.");
     }
-  };
-
-  const showSuccessModal = (message: string) => {
-    setSuccessMessage(message);
-    setSuccessModalVisible(true);
   };
 
   useEffect(() => {
@@ -157,12 +150,6 @@ export default function Decks() {
           <PrimaryButton onPress={handleAddDeck} title="Add Deck" />
         </View>
       </Modal>
-      <SuccessModal
-        isVisible={isSuccessModalVisible}
-        title="Success"
-        subtitle="Deck has been added!"
-        onClose={closeSuccessModal}
-      />
     </SafeAreaView>
   );
 }

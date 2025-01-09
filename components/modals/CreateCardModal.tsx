@@ -4,6 +4,7 @@ import Modal from "react-native-modal";
 import { Text } from "react-native";
 import PrimaryButton from "../PrimaryButton";
 import { createCard } from "@/lib/appwrite";
+import { useSuccessModal } from "@/context/ModalContext";
 
 const CreateCardModal: React.FC<{
   isVisible: boolean;
@@ -16,6 +17,8 @@ const CreateCardModal: React.FC<{
   const [newCardFrontText, setNewCardFrontText] = useState("");
   const [newCardBackText, setNewCardBackText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const { showSuccessModal } = useSuccessModal();
 
   const handleCreateCard = async () => {
     if (newCardName.trim() === "") {
@@ -36,6 +39,7 @@ const CreateCardModal: React.FC<{
     try {
       await createCard(deckId, newCardName, newCardFrontText, newCardBackText);
       refreshData();
+      showSuccessModal("New card has been added!");
       console.log(
         `Deck id for the card: ${deckId}, Card Name: ${newCardName}, Front Text: ${newCardFrontText}, Back Text: ${newCardBackText}`,
       );
