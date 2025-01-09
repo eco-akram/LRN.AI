@@ -12,7 +12,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import FormField from "@/components/FormField";
 import { Link, router } from "expo-router";
 import { useState } from "react";
-import SubmitButton from "@/components/SubmitButton";
+import SubmitButton from "@/components/buttons/SubmitButton";
 import { KeyboardAvoidingView } from "react-native";
 import { ScrollView } from "react-native";
 

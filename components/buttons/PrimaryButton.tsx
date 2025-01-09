@@ -16,7 +16,7 @@ const PrimaryButton: React.FC<PrimaryButtonProps> = ({
     className="w-full rounded-xl flex flex-row justify-center items-center bg-white p-3 mb-3 mt-3"
     {...props}
   >
-    <Text className="text-black">{title}</Text>
+    <Text className="font-Segoeui text-black">{title}</Text>
   </TouchableOpacity>
 );
 

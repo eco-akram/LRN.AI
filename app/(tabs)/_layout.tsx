@@ -40,8 +40,8 @@ export default function TabLayout() {
           tabBarShowLabel: false,
           tabBarStyle: {
             backgroundColor: "#000000",
-            borderTopWidth: 0,
-            borderTopColor: "#000000",
+            borderTopWidth: 0.5,
+            borderTopColor: "#141414",
             height: 110,
           },
         }}

@@ -3,11 +3,11 @@ import { TouchableOpacity, View, Image, StyleSheet } from "react-native";
 import { Text } from "react-native";
 import icons from "@/constants/icons";
 import Modal from "react-native-modal";
-import PrimaryButton from "./PrimaryButton";
+import PrimaryButton from "./buttons/PrimaryButton";
 import EditDeckModal from "./modals/EditDeckModal";
 import DeleteDeckModal from "./modals/DeleteDeckModal";
 import CreateCardModal from "./modals/CreateCardModal";
-import SecondaryButton from "./SecondaryButton";
+import SecondaryButton from "./buttons/SecondaryButton";
 
 const DeckListDeck: React.FC<{
   deckName: string;
@@ -56,7 +56,7 @@ const DeckListDeck: React.FC<{
             <Text className="text-white text-xl font-SegoeuiBold">
               {deckName}
             </Text>
-            <Text className="text-gray-500 font-Segoeui leading-tight">
+            <Text className="text-secondary font-SegoeuiBold leading-tight">
               {cardCount} {cardCount === 1 ? "card" : "cards"}
             </Text>
           </View>
@@ -69,7 +69,7 @@ const DeckListDeck: React.FC<{
           />
         </TouchableOpacity>
       </View>
-      <View className="border-t-2 border-gray-500 mt-2" />
+      <View className="border-t-2 border-secondary mt-2" />
       {/* Options Modal */}
       <Modal
         isVisible={isOptionsModalVisible}

@@ -16,8 +16,10 @@ import icons from "@/constants/icons";
 import { Image } from "expo-image";
 import Loading from "@/components/Loading";
 import Modal from "react-native-modal";
-import PrimaryButton from "@/components/PrimaryButton";
+import PrimaryButton from "@/components/buttons/PrimaryButton";
 import { useSuccessModal } from "@/context/ModalContext";
+
+//TODO POLISH ALL MODALS, THE THE DESIGN MORE CONSISTENT AND SMOOTH, THE RENDERS ARE FLICKERING
 
 interface Deck {
   deckId: string;
@@ -89,9 +91,15 @@ export default function Decks() {
     }
   };
 
-  useEffect(() => {
+  /*   useEffect(() => {
     console.log(decksCards);
-  }, [decksCards]);
+  }, [decksCards]); */
+
+  useEffect(() => {
+    if (isModalVisible) {
+      setNewDeckName("");
+    }
+  }, [isModalVisible]);
 
   if (loading) {
     return <Loading />;
@@ -115,7 +123,11 @@ export default function Decks() {
           }))}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, section }) => (
-            <DeckListCards card={item} deckId={section.deckId} />
+            <DeckListCards
+              card={item}
+              deckId={section.deckId}
+              refreshData={fetchDecks}
+            />
           )}
           renderSectionHeader={({ section: { title, deckId, cardCount } }) => (
             <DeckListDeck

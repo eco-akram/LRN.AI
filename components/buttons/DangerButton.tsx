@@ -16,7 +16,7 @@ const DangerButton: React.FC<DangerButtonProps> = ({
     className="w-full rounded-xl flex flex-row justify-center items-center border border-danger p-3 mb-4"
     {...props}
   >
-    <Text className="text-danger ">{title}</Text>
+    <Text className="font-Segoeui text-danger ">{title}</Text>
   </TouchableOpacity>
 );
 

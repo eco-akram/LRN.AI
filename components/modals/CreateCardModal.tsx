@@ -1,15 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import Modal from "react-native-modal";
 import { Text } from "react-native";
-import PrimaryButton from "../PrimaryButton";
+import PrimaryButton from "../buttons/PrimaryButton";
 import { createCard } from "@/lib/appwrite";
 import { useSuccessModal } from "@/context/ModalContext";
 
 const CreateCardModal: React.FC<{
   isVisible: boolean;
   onClose: () => void;
-  onBack: () => void; // New Back Prop
+  onBack: () => void;
   deckId: string;
   refreshData: () => void;
 }> = ({ isVisible, onClose, onBack, deckId, refreshData }) => {
@@ -19,6 +19,14 @@ const CreateCardModal: React.FC<{
   const [isLoading, setIsLoading] = useState(false);
 
   const { showSuccessModal } = useSuccessModal();
+
+  useEffect(() => {
+    if (isVisible) {
+      setNewCardName("");
+      setNewCardFrontText("");
+      setNewCardBackText("");
+    }
+  }, [isVisible]);
 
   const handleCreateCard = async () => {
     if (newCardName.trim() === "") {

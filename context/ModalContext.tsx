@@ -35,7 +35,7 @@ export const ModalProvider: React.FC<{ children: React.ReactNode }> = ({
       {children}
       <SuccessModal
         isVisible={isVisible}
-        title="Success"
+        title="Success!"
         subtitle={message}
         onClose={closeSuccessModal}
       />

@@ -2,32 +2,30 @@ import React, { useState } from "react";
 import { View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import Modal from "react-native-modal";
 import { Text } from "react-native";
-import PrimaryButton from "../buttons/PrimaryButton";
-import SecondaryButton from "../buttons/SecondaryButton";
 import DangerButton from "../buttons/DangerButton";
-import { deleteDeckWithCards } from "@/lib/appwrite";
+import { deleteCard } from "@/lib/appwrite";
 import { useSuccessModal } from "@/context/ModalContext";
 
-const DeleteDeckModal: React.FC<{
+const DeleteCardModal: React.FC<{
   isVisible: boolean;
   onClose: () => void;
-  onBack: () => void; // Back Prop for navigation
-  deckId: string;
-  deckName: string;
+  onBack: () => void;
+  cardId: string;
+  cardName: string;
   refreshData: () => void;
-}> = ({ isVisible, onClose, onBack, deckId, deckName, refreshData }) => {
+}> = ({ isVisible, onClose, onBack, cardId, cardName, refreshData }) => {
   const { showSuccessModal } = useSuccessModal();
 
   const handleDelete = async () => {
     try {
-      await deleteDeckWithCards(deckId);
+      await deleteCard(cardId);
       refreshData();
-      showSuccessModal("Deck has been deleted!");
-      console.log(`Deleting Deck: ${deckId}`);
+      showSuccessModal("Card has been deleted!");
+      console.log(`Deleting Card: ${cardId}`);
       onClose();
     } catch (error) {
-      console.error("Error deleting deck:", error);
-      alert("Failed to delete deck. Please try again.");
+      console.error("Error deleting card:", error);
+      alert("Failed to delete card. Please try again.");
     }
   };
 
@@ -46,16 +44,16 @@ const DeleteDeckModal: React.FC<{
         </TouchableOpacity>
 
         {/* Modal Title */}
-        <Text style={styles.title}>Delete Deck</Text>
+        <Text style={styles.title}>Delete Card</Text>
 
         {/* Warning Message */}
         <Text className="font-SegoeuiBold text-lg text-center mb-4 color-danger">
-          Are you sure you want to delete the deck "{deckName}"? This action
+          Are you sure you want to delete the card "{cardName}"? This action
           cannot be undone.
         </Text>
 
         {/* Confirm and Cancel Buttons */}
-        <DangerButton title="Delete Deck" onPress={handleDelete} />
+        <DangerButton title="Delete Card" onPress={handleDelete} />
         <TouchableOpacity onPress={onClose}>
           <Text className="font-Segoeui color-secondary">Cancel</Text>
         </TouchableOpacity>
@@ -105,4 +103,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DeleteDeckModal;
+export default DeleteCardModal;

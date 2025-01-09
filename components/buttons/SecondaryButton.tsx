@@ -16,7 +16,7 @@ const SecondaryButton: React.FC<SecondaryButtonProps> = ({
     className="w-full rounded-xl flex flex-row justify-center items-center border border-white p-3 mb-4"
     {...props}
   >
-    <Text className="text-white ">{title}</Text>
+    <Text className="font-Segoeui text-white ">{title}</Text>
   </TouchableOpacity>
 );
 

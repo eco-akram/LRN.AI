@@ -9,6 +9,7 @@ module.exports = {
         primaryBg: "#141414",
         secondaryBG: "#1E1E1E",
         secondary: "#999",
+        accent: "#A65EE6",
         danger: "#f43f5e",
       },
       fontFamily: {

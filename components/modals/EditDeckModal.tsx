@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import Modal from "react-native-modal";
 import { Text } from "react-native";
-import PrimaryButton from "../PrimaryButton";
+import PrimaryButton from "../buttons/PrimaryButton";
 import { editDeck } from "@/lib/appwrite";
 import { useSuccessModal } from "@/context/ModalContext";
 
@@ -16,6 +16,12 @@ const EditDeckModal: React.FC<{
 }> = ({ isVisible, onClose, onBack, deckId, deckName, refreshData }) => {
   const [newDeckName, setNewDeckName] = useState(deckName);
   const { showSuccessModal } = useSuccessModal();
+
+  useEffect(() => {
+    if (isVisible) {
+      setNewDeckName("");
+    }
+  }, [isVisible]);
 
   const handleSaveChanges = async () => {
     if (newDeckName.trim() === "") {
@@ -58,7 +64,10 @@ const EditDeckModal: React.FC<{
             value={newDeckName}
             onChangeText={setNewDeckName}
           />
-          <PrimaryButton title="Save Changes" onPress={handleSaveChanges} />
+          <PrimaryButton
+            title="Save your changes"
+            onPress={handleSaveChanges}
+          />
         </View>
       </Modal>
     </View>
