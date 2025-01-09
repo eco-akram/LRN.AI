@@ -12,6 +12,8 @@ import DeleteIcon from "../assets/icons/DeleteIcon.png";
 import ArrowCardIcon from "../assets/icons/ArrowCardIcon.png";
 import SuccessPrimary from "../assets/icons/SuccessPrimary.png";
 import SuccessWhite from "../assets/icons/SuccessWhite.png";
+import LogoTop from "../assets/images/LogoTop.png";
+import ArrowTopRight from "../assets/icons/ArrowTopRight.png";
 
 export default {
   profile,
@@ -28,4 +30,6 @@ export default {
   ArrowCardIcon,
   SuccessPrimary,
   SuccessWhite,
+  LogoTop,
+  ArrowTopRight,
 };

@@ -13,7 +13,7 @@ interface TabIconProps {
 
 const TabIcon: React.FC<TabIconProps> = ({ icon, color, name, focused }) => {
   return (
-    <View className="flex-1 items-center justify-start gap-1 w-16">
+    <View className="flex-1 items-center justify-start gap-1 w-16 bg-black">
       <Image
         source={icon}
         resizeMode="contain"

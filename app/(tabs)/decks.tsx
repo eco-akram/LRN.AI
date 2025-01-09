@@ -160,10 +160,10 @@ const styles = StyleSheet.create({
   deckContainer: {
     marginBottom: 20,
     padding: 10,
-    backgroundColor: "#1E1E1E",
+    backgroundColor: "#141414",
     borderRadius: 10,
     borderWidth: 2,
-    borderColor: "#252629",
+    borderColor: "#242424",
   },
   cardsContainer: {
     flexDirection: "row",
