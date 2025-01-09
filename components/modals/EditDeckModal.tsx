@@ -4,16 +4,18 @@ import Modal from "react-native-modal";
 import { Text } from "react-native";
 import PrimaryButton from "../PrimaryButton";
 import { editDeck } from "@/lib/appwrite";
+import SuccessModal from "./SuccessModal";
 
 const EditDeckModal: React.FC<{
   isVisible: boolean;
   onClose: () => void;
-  onBack: () => void; // New Back Prop
+  onBack: () => void;
   deckId: string;
   deckName: string;
   refreshData: () => void;
 }> = ({ isVisible, onClose, onBack, deckId, deckName, refreshData }) => {
   const [newDeckName, setNewDeckName] = useState(deckName);
+  const [isSuccessModalVisible, setSuccessModalVisible] = useState(false);
 
   const handleSaveChanges = async () => {
     if (newDeckName.trim() === "") {
@@ -23,8 +25,12 @@ const EditDeckModal: React.FC<{
 
     try {
       await editDeck(deckId, newDeckName);
+
       refreshData();
+      /* setSuccessModalVisible(true); */
+      setTimeout(() => setSuccessModalVisible(true), 1000);
       console.log(`Edit Deck: ${deckId}, New Name: ${newDeckName}`);
+
       onClose();
     } catch (error) {
       console.error("Error editing deck:", error);
@@ -33,28 +39,36 @@ const EditDeckModal: React.FC<{
   };
 
   return (
-    <Modal
-      isVisible={isVisible}
-      onBackdropPress={onClose}
-      swipeDirection="down"
-      style={styles.modal}
-      onBackButtonPress={onClose}
-    >
-      <View style={styles.modalContent}>
-        <TouchableOpacity onPress={onBack} style={styles.backButton}>
-          <Text style={styles.backText}>Back</Text>
-        </TouchableOpacity>
-        <Text style={styles.title}>Edit Deck Name</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter new deck name"
-          placeholderTextColor="#999"
-          value={newDeckName}
-          onChangeText={setNewDeckName}
-        />
-        <PrimaryButton title="Save Changes" onPress={handleSaveChanges} />
-      </View>
-    </Modal>
+    <View>
+      <Modal
+        isVisible={isVisible}
+        onBackdropPress={onClose}
+        swipeDirection="down"
+        style={styles.modal}
+        onBackButtonPress={onClose}
+      >
+        <View style={styles.modalContent}>
+          <TouchableOpacity onPress={onBack} style={styles.backButton}>
+            <Text style={styles.backText}>Back</Text>
+          </TouchableOpacity>
+          <Text style={styles.title}>Edit Deck Name</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter new deck name"
+            placeholderTextColor="#999"
+            value={newDeckName}
+            onChangeText={setNewDeckName}
+          />
+          <PrimaryButton title="Save Changes" onPress={handleSaveChanges} />
+        </View>
+      </Modal>
+      <SuccessModal
+        isVisible={isSuccessModalVisible}
+        title="Success"
+        subtitle="Deck name has been updated!"
+        onClose={() => setSuccessModalVisible(false)}
+      />
+    </View>
   );
 };
 
