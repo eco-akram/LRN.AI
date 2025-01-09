@@ -32,7 +32,9 @@ export default function Decks() {
   const [loading, setLoading] = useState(true);
   const [isModalVisible, setModalVisible] = useState(false);
   const [newDeckName, setNewDeckName] = useState("");
+
   const [isSuccessModalVisible, setSuccessModalVisible] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const fetchDecks = async () => {
     setLoading(true);
@@ -81,15 +83,17 @@ export default function Decks() {
 
       setNewDeckName("");
       setModalVisible(false);
-      setSuccessModalVisible(true);
+
+      showSuccessModal("Deck has been added!");
     } catch (error) {
       console.error("Error adding deck:", error);
       alert("Failed to add deck. Please try again.");
     }
   };
 
-  const closeSuccessModal = () => {
-    setSuccessModalVisible(false);
+  const showSuccessModal = (message: string) => {
+    setSuccessMessage(message);
+    setSuccessModalVisible(true);
   };
 
   useEffect(() => {

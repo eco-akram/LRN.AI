@@ -1,8 +1,3 @@
-import {
-  DarkTheme,
-  DefaultTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -15,10 +10,10 @@ import * as SystemUI from "expo-system-ui";
 
 import "../global.css";
 import { View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import GlobalProvider from "../context/GlobalProvider";
 
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { ModalProvider } from "@/context/ModalContext";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -61,18 +56,20 @@ export default function RootLayout() {
   return (
     <GestureHandlerRootView>
       <GlobalProvider>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen
-            name="(auth)"
-            options={{ headerShown: false, animation: "fade" }}
-          />
-          <Stack.Screen
-            name="index"
-            options={{ headerShown: false, animation: "fade" }}
-          />
-          <Stack.Screen name="+not-found" options={{ headerShown: false }} />
-        </Stack>
+        <ModalProvider>
+          <Stack>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+            <Stack.Screen
+              name="(auth)"
+              options={{ headerShown: false, animation: "fade" }}
+            />
+            <Stack.Screen
+              name="index"
+              options={{ headerShown: false, animation: "fade" }}
+            />
+            <Stack.Screen name="+not-found" options={{ headerShown: false }} />
+          </Stack>
+        </ModalProvider>
       </GlobalProvider>
     </GestureHandlerRootView>
   );
