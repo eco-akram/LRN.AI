@@ -3,7 +3,7 @@ import {
   StyleSheet,
   Text,
   View,
-  SectionList,
+  FlatList,
   TouchableOpacity,
   TextInput,
 } from "react-native";
@@ -18,8 +18,6 @@ import Loading from "@/components/Loading";
 import Modal from "react-native-modal";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import { useSuccessModal } from "@/context/ModalContext";
-
-//TODO POLISH ALL MODALS, THE THE DESIGN MORE CONSISTENT AND SMOOTH, THE RENDERS ARE FLICKERING
 
 interface Deck {
   deckId: string;
@@ -36,6 +34,7 @@ export default function Decks() {
   const [newDeckName, setNewDeckName] = useState("");
 
   const { showSuccessModal } = useSuccessModal();
+
   const fetchDecks = async () => {
     setLoading(true);
     try {
@@ -49,17 +48,6 @@ export default function Decks() {
   };
 
   useEffect(() => {
-    const fetchDecks = async () => {
-      try {
-        const deckList = await getDeckCardsList(user.$id);
-        setDecksCards(deckList);
-      } catch (error) {
-        console.log("Error fetching decks", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchDecks();
   }, []);
 
@@ -91,16 +79,6 @@ export default function Decks() {
     }
   };
 
-  /*   useEffect(() => {
-    console.log(decksCards);
-  }, [decksCards]); */
-
-  useEffect(() => {
-    if (isModalVisible) {
-      setNewDeckName("");
-    }
-  }, [isModalVisible]);
-
   if (loading) {
     return <Loading />;
   }
@@ -114,28 +92,40 @@ export default function Decks() {
         </TouchableOpacity>
       </View>
       <View className="m-5">
-        <SectionList
-          sections={decksCards.map((deck) => ({
-            title: deck.deckName,
-            deckId: deck.deckId,
-            data: deck.cards,
-            cardCount: deck.cards.length,
-          }))}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item, section }) => (
-            <DeckListCards
-              card={item}
-              deckId={section.deckId}
-              refreshData={fetchDecks}
-            />
-          )}
-          renderSectionHeader={({ section: { title, deckId, cardCount } }) => (
-            <DeckListDeck
-              deckName={title}
-              deckId={deckId}
-              cardCount={cardCount}
-              refreshData={fetchDecks}
-            />
+        <FlatList
+          data={decksCards}
+          keyExtractor={(item) => item.deckId}
+          renderItem={({ item }) => (
+            <View style={styles.deckContainer}>
+              {/* Header (Deck) */}
+              <DeckListDeck
+                deckName={item.deckName}
+                deckId={item.deckId}
+                cardCount={item.cards.length}
+                refreshData={fetchDecks}
+              />
+
+              {/* Vertical Line and Cards */}
+              <View style={styles.cardsContainer}>
+                <View style={styles.cardsList}>
+                  {item.cards.length === 0 ? (
+                    <Text style={styles.noCardsText}>
+                      No cards in this deck
+                    </Text>
+                  ) : (
+                    item.cards.map((card) => (
+                      <View key={card.cardId} style={styles.cardItem}>
+                        <DeckListCards
+                          card={card}
+                          deckId={item.deckId}
+                          refreshData={fetchDecks}
+                        />
+                      </View>
+                    ))
+                  )}
+                </View>
+              </View>
+            </View>
           )}
         />
       </View>
@@ -167,22 +157,28 @@ export default function Decks() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "white",
-  },
-  deckTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    backgroundColor: "#f8f8f8",
+  deckContainer: {
+    marginBottom: 20,
     padding: 10,
+    backgroundColor: "#1E1E1E",
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: "#252629",
   },
-  cardName: {
-    fontSize: 16,
-    marginLeft: 10,
-    padding: 5,
+  cardsContainer: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    marginTop: 10,
+  },
+  cardsList: {
+    flex: 1,
+  },
+  cardItem: {
+    marginBottom: 8,
+  },
+  noCardsText: {
+    color: "#888",
+    fontStyle: "italic",
   },
   icon: {
     width: 30,
