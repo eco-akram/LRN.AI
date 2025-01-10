@@ -5,14 +5,9 @@ import { getDeckCardsList, getUserCards } from "@/lib/appwrite"; // Function to 
 interface DeckListHomeProps {
   deckName: string;
   deckId: string;
-  triggerRefresh: () => void; // Function to notify the parent
 }
 
-const DeckListHome: React.FC<DeckListHomeProps> = ({
-  deckName,
-  deckId,
-  triggerRefresh,
-}) => {
+const DeckListHome: React.FC<DeckListHomeProps> = ({ deckName, deckId }) => {
   const [deckStatus, setDeckStatus] = useState<
     "completed" | "incomplete" | "no-cards"
   >("no-cards");
@@ -34,8 +29,8 @@ const DeckListHome: React.FC<DeckListHomeProps> = ({
           setDeckStatus(allCompleted ? "completed" : "incomplete");
         }
 
+        console.log("Fetched cards");
         // Trigger the parent to refresh the list after fetching cards
-        triggerRefresh();
       } catch (error) {
         console.error("Error fetching cards:", error);
       }
