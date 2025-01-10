@@ -163,7 +163,7 @@ export default function Home() {
           <Text className="text-xl font-SegoeuiBold text-white mb-3">
             Get started
           </Text>
-          <TouchableOpacity className="rounded-2xl overflow-hidden border-2 border-secondaryBG">
+          <TouchableOpacity /* onPress={() => router.push(`/learn/${randomDeckId}`)}  */className="rounded-2xl overflow-hidden border-2 border-secondaryBG">
             <LinearGradient
               colors={["#A65EE6", "#000000"]}
               start={{ x: 2, y: 4 }}
@@ -182,7 +182,7 @@ export default function Home() {
 
         <View>
           <Text className="text-xl font-SegoeuiBold text-white mb-3">
-            Your Decks
+            Review your decks
           </Text>
         </View>
 
@@ -190,6 +190,7 @@ export default function Home() {
         <View className="flex-1 w-full bg-layer2 border-2 border-layer3 rounded-xl p-1">
           <FlatList
             className="flex-1 rounded-lg w-full"
+            horizontal={true}
             contentContainerStyle={{ paddingBottom: 20 }}
             data={decks as { deckName: string; $id: string }[]}
             keyExtractor={(item) => item.$id}
