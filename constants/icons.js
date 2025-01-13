@@ -14,6 +14,7 @@ import SuccessPrimary from "../assets/icons/SuccessPrimary.png";
 import SuccessWhite from "../assets/icons/SuccessWhite.png";
 import LogoTop from "../assets/images/LogoTop.png";
 import ArrowTopRight from "../assets/icons/ArrowTopRight.png";
+import FailPrimary from "../assets/icons/FailPrimary.png";
 
 export default {
   profile,
@@ -32,4 +33,5 @@ export default {
   SuccessWhite,
   LogoTop,
   ArrowTopRight,
+  FailPrimary,
 };

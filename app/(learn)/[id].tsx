@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { getUserCards } from "@/lib/appwrite";
-import PrimaryButton from "@/components/buttons/PrimaryButton";
-import ErrorModal from "@/components/modals/ErrorModal";
 import Loading from "@/components/Loading";
-import { Ionicons } from "@expo/vector-icons";
+import ErrorModal from "@/components/modals/ErrorModal";
+import SuccessModal from "@/components/modals/SuccessModal";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
-import SecondaryButton from "@/components/buttons/SecondaryButton";
-import DangerButton from "@/components/buttons/DangerButton";
 import IncorrectButton from "@/components/buttons/IncorrectButton";
 import CorrectButton from "@/components/buttons/CorrectButton";
-import icons from "@/constants/icons";
+import Animated, {
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from "react-native-reanimated";
 
 interface Card {
   cardId: string;
@@ -28,7 +30,7 @@ const ReviewDeck = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
   const [isEmptyDeck, setIsEmptyDeck] = useState(false);
-  const [isReviewComplete, setIsReviewComplete] = useState(false); // Track review completion
+  const [isReviewComplete, setIsReviewComplete] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -54,8 +56,8 @@ const ReviewDeck = () => {
             }))
           );
           setLoading(false);
-          setIsEmptyDeck(false); // Reset empty deck state when cards are set
-          setCurrentIndex(0); // Start from the first card
+          setIsEmptyDeck(false);
+          setCurrentIndex(0);
         }
       } catch (error) {
         console.error("Error fetching cards:", error);
@@ -70,7 +72,7 @@ const ReviewDeck = () => {
       setCurrentIndex((prev) => prev + 1);
       setShowAnswer(false);
     } else {
-      setIsReviewComplete(true); // Show completion modal when review is done
+      setIsReviewComplete(true);
     }
   };
 
@@ -85,7 +87,7 @@ const ReviewDeck = () => {
           title="No Cards Available"
           subtitle="This deck has no cards. Please add cards before reviewing."
           isVisible={true}
-          onClose={() => router.back()} // Go back to the previous screen
+          onClose={() => router.back()}
         />
       </View>
     );
@@ -94,11 +96,11 @@ const ReviewDeck = () => {
   if (isReviewComplete) {
     return (
       <View className="flex-1 justify-center items-center bg-black p-5">
-        <ErrorModal
+        <SuccessModal
           title="Review Complete"
           subtitle="You have finished reviewing this deck."
           isVisible={true}
-          onClose={() => router.back()} // Navigate back after review
+          onClose={() => router.back()}
         />
       </View>
     );
@@ -112,21 +114,18 @@ const ReviewDeck = () => {
           <Text className="font-SegoeuiBlack text-white text-2xl">
             DECK NAME
           </Text>
-          <Ionicons name="arrow-forward" size={24} color="white" />
         </View>
 
         {/* CARD CONTAINER */}
         <View className="flex-1 justify-center items-center">
-          <View className=" p-5 rounded-xl w-full max-w-md justify-center items-center">
-
-            {/* CARD */}
+          <TouchableOpacity onPress={() => setShowAnswer(!showAnswer)}>
             <LinearGradient
               colors={["#1B1C1D", "#0A0A0A"]}
               start={{ x: 1, y: 0 }}
               end={{ x: 0, y: 0.6 }}
               style={styles.gradient}
             >
-              <View className=" p-5 h-96 rounded-lg min-w-72 justify-center">
+              <View className="p-5 h-96 rounded-lg min-w-72 justify-center">
                 <Text className="text-white text-xl font-Segoeui text-center">
                   {showAnswer
                     ? cards[currentIndex]?.backText
@@ -134,30 +133,28 @@ const ReviewDeck = () => {
                 </Text>
               </View>
             </LinearGradient>
-            {/* COUNT */}
-            <Text className="text-secondary font-SegoeuiBold text-center text-base mt-5">
-              Card {currentIndex + 1} of {cards.length}
-            </Text>
-            {/* BUTTON */}
-            <PrimaryButton
-              title={showAnswer ? "Next Card" : "Show Answer"}
-              onPress={() =>
-                showAnswer ? handleNextCard() : setShowAnswer(true)
-              }
-            />
-            <View className="flex-row justify-between mt-5 w-full gap-7 space-x-3">
-              <View className="flex-1">
-                <IncorrectButton
-                  title="Incorrect"
-                  onPress={() => console.log("Incorrect")}
-                />
-              </View>
-              <View className="flex-1">
-                <CorrectButton
-                  title="Correct"
-                  onPress={() => console.log("Correct")}
-                />
-              </View>
+          </TouchableOpacity>
+
+          {/* COUNT */}
+          <Text className="text-secondary font-SegoeuiBold text-center text-base mt-5">
+            Card {currentIndex + 1} of {cards.length}
+          </Text>
+
+          {/* BUTTONS */}
+          <View className="flex-row justify-between mt-5 w-full gap-7 space-x-3">
+            <View className="flex-1">
+              <IncorrectButton
+                title="Incorrect"
+                onPress={handleNextCard} // Move to next card
+                whenChange={showAnswer}
+              />
+            </View>
+            <View className="flex-1">
+              <CorrectButton
+                title="Correct"
+                onPress={handleNextCard} // Move to next card
+                whenChange={showAnswer}
+              />
             </View>
           </View>
         </View>
@@ -173,9 +170,9 @@ const styles = StyleSheet.create({
     borderColor: "#37383A",
     borderWidth: 2,
     padding: 16,
-    borderRadius: 10, // Make the corners rounded
+    borderRadius: 20,
     marginTop: 20,
     flexDirection: "column",
-    justifyContent: "space-between",
+    justifyContent: "center",
   },
 });

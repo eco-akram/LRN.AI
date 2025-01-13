@@ -36,7 +36,7 @@ const ErrorModal: React.FC<ErrorModalProps> = ({
       onBackButtonPress={handleContinue}
     >
       <View className="p-6 bg-secondaryBG rounded-3xl items-center">
-        <Image source={icons.SuccessPrimary} className="w-20 h-20 mb-4" />
+        <Image source={icons.FailPrimary} className="w-20 h-20 mb-4" />
         <Text className="font-SegoeuiBold text-white text-2xl mb-2">
           {title}
         </Text>
