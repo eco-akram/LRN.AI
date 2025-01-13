@@ -34,7 +34,7 @@ const SuccessModal: React.FC<{
     >
       <View className="p-4 bg-secondaryBG rounded-3xl items-center">
         <Image source={icons.SuccessPrimary} style={styles.iconBig} />
-        <Text className="font-SegoeuiBold text-white text-2xl mb-2">
+        <Text className="font-SegoeuiBold text-white text-center text-2xl mb-2">
           {title}
         </Text>
         <Text className="font-SegoeuiBold text-secondary mb-5">{subtitle}</Text>

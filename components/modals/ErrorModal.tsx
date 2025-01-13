@@ -4,6 +4,7 @@ import { Text } from "react-native";
 import icons from "@/constants/icons";
 import Modal from "react-native-modal";
 import AccentButton from "../buttons/AccentButton";
+import { StyleSheet } from "react-native";
 
 interface ErrorModalProps {
   title: string;
@@ -32,12 +33,12 @@ const ErrorModal: React.FC<ErrorModalProps> = ({
       onBackdropPress={handleContinue}
       onSwipeComplete={handleContinue}
       swipeDirection="down"
-      style={{ justifyContent: "center", margin: 0 }}
+      className="flex justify-center"
       onBackButtonPress={handleContinue}
     >
       <View className="p-6 bg-secondaryBG rounded-3xl items-center">
-        <Image source={icons.FailPrimary} className="w-20 h-20 mb-4" />
-        <Text className="font-SegoeuiBold text-white text-2xl mb-2">
+        <Image source={icons.FailPrimary} style={styles.iconBig} />
+        <Text className="font-SegoeuiBold text-white text-center text-2xl mb-2">
           {title}
         </Text>
         <Text className="font-SegoeuiBold text-secondary text-center mb-5">
@@ -48,5 +49,10 @@ const ErrorModal: React.FC<ErrorModalProps> = ({
     </Modal>
   );
 };
+
+const styles = StyleSheet.create({
+  icon: { width: 30, height: 30 },
+  iconBig: { width: 65, height: 65, marginBottom: 10 },
+});
 
 export default ErrorModal;

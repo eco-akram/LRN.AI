@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { Children, useEffect, useState } from "react";
 import { View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import Modal from "react-native-modal";
 import { Text } from "react-native";
 import PrimaryButton from "../buttons/PrimaryButton";
 import { createCard } from "@/lib/appwrite";
 import { useSuccessModal } from "@/context/ModalContext";
+import ErrorModal from "./ErrorModal";
 
 const CreateCardModal: React.FC<{
   isVisible: boolean;
@@ -18,6 +19,9 @@ const CreateCardModal: React.FC<{
   const [newCardBackText, setNewCardBackText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const [visible, setVisible] = useState(false);
+  const [subtitle, setSubtitle] = useState("");
+
   const { showSuccessModal } = useSuccessModal();
 
   useEffect(() => {
@@ -30,15 +34,24 @@ const CreateCardModal: React.FC<{
 
   const handleCreateCard = async () => {
     if (newCardName.trim() === "") {
-      alert("Please enter the card name!");
+      setVisible(true);
+      setSubtitle("Please enter the card name!");
+      return;
+    }
+    if (newCardName.length > 20) {
+      setVisible(true);
+      setSubtitle("Card name must be 20 characters or less!");
+      console.log(visible);
       return;
     }
     if (newCardFrontText.trim() === "") {
-      alert("Please enter the front text!");
+      setVisible(true);
+      setSubtitle("Please enter the front text!");
       return;
     }
     if (newCardBackText.trim() === "") {
-      alert("Please enter the back text!");
+      setVisible(true);
+      setSubtitle("Please enter the back text!");
       return;
     }
 
@@ -49,7 +62,7 @@ const CreateCardModal: React.FC<{
       refreshData();
       showSuccessModal("New card has been added!");
       console.log(
-        `Deck id for the card: ${deckId}, Card Name: ${newCardName}, Front Text: ${newCardFrontText}, Back Text: ${newCardBackText}`,
+        `Deck id for the card: ${deckId}, Card Name: ${newCardName}, Front Text: ${newCardFrontText}, Back Text: ${newCardBackText}`
       );
     } catch (error) {
       console.error("Error creating card:", error);
@@ -96,6 +109,12 @@ const CreateCardModal: React.FC<{
           onChangeText={setNewCardBackText}
         />
         <PrimaryButton title="Create Card" onPress={handleCreateCard} />
+        <ErrorModal
+          title="Error!"
+          subtitle={subtitle}
+          onClose={() => setVisible(false)}
+          isVisible={visible}
+        />
       </View>
     </Modal>
   );
