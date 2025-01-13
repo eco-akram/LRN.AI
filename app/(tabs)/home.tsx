@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, memo } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import {
   FlatList,
@@ -24,11 +24,12 @@ import Modal from "react-native-modal";
 import { useGlobalContext } from "@/context/GlobalProvider";
 import { router } from "expo-router";
 import useAppwrite from "@/lib/useAppwrite";
-
+import { HelloWave } from "@/components/HelloWave";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import DangerButton from "@/components/buttons/DangerButton";
 import FormInput from "@/components/buttons/FormInput";
 import DeckListHome from "@/components/DeckListHome";
+
 
 export default function Home() {
   const { user, setUser } = useGlobalContext();
@@ -36,7 +37,7 @@ export default function Home() {
   const [settingsVisible, setSettingsVisible] = useState(false);
   const [newUsername, setNewUsername] = useState("");
   const [confirmation, setConfirmation] = useState("");
-
+  const MemoizedHelloWave = memo(HelloWave);
   const { data: decks, refetch } = useAppwrite(() => getUserDecks(user.$id));
   const [refreshing, setRefreshing] = useState(false);
   const [hasRefreshed, setHasRefreshed] = useState(false);
@@ -138,7 +139,7 @@ export default function Home() {
 
         <View>
           <Text className="text-3xl font-SegoeuiBlack text-white mb-5">
-            Hello, {user.username} 👋
+            Hello, {user.username} 👋 
           </Text>
         </View>
 

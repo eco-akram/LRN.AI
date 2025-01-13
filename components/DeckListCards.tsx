@@ -37,6 +37,7 @@ const DeckListCards: React.FC<{
     setDeleteCardVisible(false);
     setTimeout(() => setChangeCardVisible(true), 300);
   };
+  
 
   useEffect(() => {
     if (isChangeCardVisible) {
@@ -46,6 +47,13 @@ const DeckListCards: React.FC<{
     }
   }, [isChangeCardVisible]);
 
+  const ensureQuestionMark = (text: string) => {
+    if (!text.trim().endsWith("?")) {
+      return text.trim() + "?";
+    }
+    return text;
+  };
+ 
   const handleChangeCard = async () => {
     if (newCardName.trim() === "") {
       alert("Please enter the card name!");
@@ -59,6 +67,8 @@ const DeckListCards: React.FC<{
       alert("Please enter the back text!");
       return;
     }
+
+
 
     try {
       await editCard(
@@ -118,6 +128,7 @@ const DeckListCards: React.FC<{
             placeholderTextColor="#999"
             value={newCardFrontText}
             onChangeText={setNewCardFrontText}
+            onBlur={() => setNewCardFrontText(ensureQuestionMark(newCardFrontText))}
           />
           <TextInput
             style={styles.input}

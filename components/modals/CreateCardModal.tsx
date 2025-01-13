@@ -6,6 +6,7 @@ import PrimaryButton from "../buttons/PrimaryButton";
 import { createCard } from "@/lib/appwrite";
 import { useSuccessModal } from "@/context/ModalContext";
 
+
 const CreateCardModal: React.FC<{
   isVisible: boolean;
   onClose: () => void;
@@ -28,6 +29,13 @@ const CreateCardModal: React.FC<{
     }
   }, [isVisible]);
 
+  const ensureQuestionMark = (text: string) => {
+    if (!text.trim().endsWith("?")) {
+      return text.trim() + "?";
+    }
+    return text;
+  };
+  
   const handleCreateCard = async () => {
     if (newCardName.trim() === "") {
       alert("Please enter the card name!");
@@ -87,6 +95,7 @@ const CreateCardModal: React.FC<{
           placeholderTextColor="#999"
           value={newCardFrontText}
           onChangeText={setNewCardFrontText}
+          onBlur={() => setNewCardFrontText(ensureQuestionMark(newCardFrontText))}
         />
         <TextInput
           style={styles.input}

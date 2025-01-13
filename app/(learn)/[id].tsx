@@ -18,6 +18,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
+
 interface Card {
   cardId: string;
   frontText: string;
@@ -34,6 +35,8 @@ const ReviewDeck = () => {
   const [isEmptyDeck, setIsEmptyDeck] = useState(false);
   const [isReviewComplete, setIsReviewComplete] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [correctCount, setCorrectCount] = useState(0);
+  const [incorrectCount, setIncorrectCount] = useState(0);
   const flipAnim = useSharedValue(0); // Animation shared value
 
   useEffect(() => {
@@ -70,13 +73,26 @@ const ReviewDeck = () => {
     fetchCards();
   }, [deckId]);
 
-  const handleNextCard = () => {
+  const handleNextCard = (isCorrect: boolean) => {
+    if (isCorrect) {
+      setCorrectCount((prev) => prev + 1);
+    } else {
+      setIncorrectCount((prev) => prev + 1);
+  
+      // Add the current card back to the end of the deck
+      setCards((prevCards) => [...prevCards, prevCards[currentIndex]]);
+    }
+  
     if (currentIndex < cards.length - 1) {
       setCurrentIndex((prev) => prev + 1);
-      setShowAnswer(false);
     } else {
-      setIsReviewComplete(true);
+      if (isCorrect || cards.length === 1) {
+        setIsReviewComplete(true);
+      } else {
+        setCurrentIndex((prev) => prev + 1);
+      }
     }
+    setShowAnswer(false);
   };
 
   const handleCardPress = () => {
@@ -117,13 +133,13 @@ const ReviewDeck = () => {
       </View>
     );
   }
-
+ 
   if (isReviewComplete) {
     return (
       <View className="flex-1 justify-center items-center bg-black p-5">
         <SuccessModal
           title="Review Complete"
-          subtitle="You have finished reviewing this deck."
+          subtitle={`You answered ${correctCount} correctly and ${incorrectCount} incorrectly.`}
           isVisible={true}
           onClose={() => router.back()}
         />
@@ -183,14 +199,14 @@ const ReviewDeck = () => {
             <View className="flex-1">
               <IncorrectButton
                 title="Incorrect"
-                onPress={handleNextCard} // Move to next card
+                onPress={() => handleNextCard(false)} // Move to next card
                 whenChange={showAnswer}
               />
             </View>
             <View className="flex-1">
               <CorrectButton
                 title="Correct"
-                onPress={handleNextCard} // Move to next card
+                onPress={() => handleNextCard(true)} // Move to next card
                 whenChange={showAnswer}
               />
             </View>
