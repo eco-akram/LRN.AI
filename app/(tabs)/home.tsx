@@ -3,7 +3,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import {
   FlatList,
-  RefreshControl,
   Text,
   View,
   TouchableOpacity,
@@ -34,6 +33,7 @@ import FormInput from "@/components/buttons/FormInput";
 import DeckListHome from "@/components/home/DeckListHome";
 import Loading from "@/components/Loading";
 import SuccessModal from "@/components/modals/SuccessModal";
+import { useDeckContext } from "@/context/DeckProvider";
 
 export default function Home() {
   const { user, setUser } = useGlobalContext();
@@ -41,13 +41,10 @@ export default function Home() {
   const [settingsVisible, setSettingsVisible] = useState(false);
   const [newUsername, setNewUsername] = useState("");
   const [confirmation, setConfirmation] = useState("");
-
-  const { data: decks, refetch } = useAppwrite(() => getUserDecks(user.$id));
-/*   const { decks, refetchDecks, loading } = useDeckContext(); */
-
   const [visible, setVisible] = useState(false);
 
-  const [loading, setLoading] = useState(false);
+/*   const { data: decks, refetch } = useAppwrite(() => getUserDecks(user.$id)); */
+  const { decks, refetchDecks, loading } = useDeckContext();
 
   useEffect(() => {
     const checkUser = async () => {
@@ -72,11 +69,11 @@ export default function Home() {
     useCallback(() => {
       const timer = setTimeout(() => {
         console.log("Refetching decks after 5 seconds...");
-        refetch();
+        refetchDecks();
       }, 5000);
 
       return () => clearTimeout(timer); // Cleanup the timer on unmount
-    }, [refetch])
+    }, [refetchDecks])
   );
 
   const handleLogout = async () => {
@@ -102,7 +99,6 @@ export default function Home() {
       await changeUserName(user.$id, newUsername);
       setConfirmation("Username changed successfully!");
       setNewUsername("");
-      await refetch();
       setUser((prevUser: User) => ({ ...prevUser, username: newUsername }));
     } catch (error) {
       console.error("Error updating username:", error);
@@ -121,7 +117,6 @@ export default function Home() {
 
   const handleReviewIncompleteDeck = async () => {
     try {
-      setLoading(true);
 
       const allDecks = await getUserDecks(user.$id);
       const incompleteDecks = [];
@@ -137,7 +132,6 @@ export default function Home() {
 
       if (incompleteDecks.length === 0) {
         setVisible(true);
-        setLoading(false);
         return;
       }
 
@@ -151,8 +145,6 @@ export default function Home() {
     } catch (error) {
       console.error("Error selecting random deck:", error);
       Alert.alert("Error", "Failed to start review for incomplete deck.");
-    } finally {
-      setLoading(false);
     }
   };
 
