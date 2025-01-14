@@ -1,6 +1,6 @@
 import { Tabs } from "expo-router";
 import React from "react";
-import { Platform, View, Text, Image } from "react-native";
+import { View, Text, Image } from "react-native";
 import icons from "@/constants/icons";
 import { StatusBar } from "expo-status-bar";
 
@@ -43,6 +43,9 @@ export default function TabLayout() {
             borderTopWidth: 0.5,
             borderTopColor: "#141414",
             height: 110,
+          },
+          sceneStyle: {
+            backgroundColor: "#0A0A0A",
           },
         }}
       >

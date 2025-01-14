@@ -8,9 +8,12 @@ module.exports = {
       colors: {
         primaryBg: "#141414",
         secondaryBG: "#1E1E1E",
-        secondary: "#999",
+        secondary: "#848484",
         accent: "#A65EE6",
         danger: "#f43f5e",
+        layer1: "#0A0A0A",
+        layer2: "#141414",
+        layer3: "#242424",
       },
       fontFamily: {
         Segoeui: ["Segoeui", "sans-serif"],

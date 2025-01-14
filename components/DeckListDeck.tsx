@@ -4,9 +4,9 @@ import { Text } from "react-native";
 import icons from "@/constants/icons";
 import Modal from "react-native-modal";
 import PrimaryButton from "./buttons/PrimaryButton";
-import EditDeckModal from "./modals/EditDeckModal";
-import DeleteDeckModal from "./modals/DeleteDeckModal";
-import CreateCardModal from "./modals/CreateCardModal";
+import EditDeckModal from "./deck/EditDeckModal";
+import DeleteDeckModal from "./deck/DeleteDeckModal";
+import CreateCardModal from "./deck/CreateCardModal";
 import SecondaryButton from "./buttons/SecondaryButton";
 
 const DeckListDeck: React.FC<{

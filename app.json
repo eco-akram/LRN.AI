@@ -4,10 +4,15 @@
     "slug": "LRN_AI",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/Logo-icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/images/Logo-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#A65EE6"
+    },
     "ios": {
       "supportsTablet": true
     },
@@ -28,7 +33,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/logo-icon.png",
+          "image": "./assets/images/Logo-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#141414"
