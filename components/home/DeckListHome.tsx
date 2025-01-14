@@ -4,7 +4,7 @@ import { getDeckCardsList, getUserCards } from "@/lib/appwrite"; // Function to 
 import { LinearGradient } from "expo-linear-gradient";
 import { StyleSheet } from "react-native";
 import { router } from "expo-router";
-import ErrorModal from "./modals/ErrorModal";
+import ErrorModal from "../modals/ErrorModal";
 
 interface DeckListHomeProps {
   deckName: string;

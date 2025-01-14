@@ -32,12 +32,14 @@ const SuccessModal: React.FC<{
       className="flex justify-center"
       onBackButtonPress={handleContinue}
     >
-      <View className="p-4 bg-secondaryBG rounded-3xl items-center">
+      <View className="p-4 bg-layer2 rounded-3xl items-center">
         <Image source={icons.SuccessPrimary} style={styles.iconBig} />
         <Text className="font-SegoeuiBold text-white text-center text-2xl mb-2">
           {title}
         </Text>
-        <Text className="font-SegoeuiBold text-secondary mb-5">{subtitle}</Text>
+        <Text className="font-SegoeuiBold text-secondary text-center mb-5">
+          {subtitle}
+        </Text>
         <AccentButton title="Continue" onPress={handleContinue} />
       </View>
     </Modal>

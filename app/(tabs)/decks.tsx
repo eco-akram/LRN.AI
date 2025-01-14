@@ -84,7 +84,7 @@ export default function Decks() {
   }
 
   return (
-    <SafeAreaView className="flex-1 bg-black">
+    <SafeAreaView className="flex-1 bg-layer1">
       <View className="flex-row m-5 items-center justify-between">
         <Text className="text-white font-SegoeuiBold text-2xl">Your Decks</Text>
         <TouchableOpacity onPress={() => setModalVisible(true)}>

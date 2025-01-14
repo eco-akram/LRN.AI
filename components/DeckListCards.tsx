@@ -12,7 +12,7 @@ import { useEffect, useState } from "react";
 import { useSuccessModal } from "@/context/ModalContext";
 import PrimaryButton from "./buttons/PrimaryButton";
 import { editCard } from "@/lib/appwrite";
-import DeleteCardModal from "./modals/DeleteCardModal";
+import DeleteCardModal from "./deck/DeleteCardModal";
 
 const DeckListCards: React.FC<{
   card: { cardId: string; cardName: string };

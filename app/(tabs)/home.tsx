@@ -19,16 +19,21 @@ import {
   changeUserName,
   signOut,
   getCurrentUser,
+  getUserCards,
 } from "@/lib/appwrite";
 import Modal from "react-native-modal";
 import { useGlobalContext } from "@/context/GlobalProvider";
 import { router } from "expo-router";
 import useAppwrite from "@/lib/useAppwrite";
 
+import SmartStudyButton from "@/components/home/SmartStudyButton";
+
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import DangerButton from "@/components/buttons/DangerButton";
 import FormInput from "@/components/buttons/FormInput";
-import DeckListHome from "@/components/DeckListHome";
+import DeckListHome from "@/components/home/DeckListHome";
+import Loading from "@/components/Loading";
+import SuccessModal from "@/components/modals/SuccessModal";
 
 export default function Home() {
   const { user, setUser } = useGlobalContext();
@@ -40,6 +45,9 @@ export default function Home() {
   const { data: decks, refetch } = useAppwrite(() => getUserDecks(user.$id));
   const [refreshing, setRefreshing] = useState(false);
   const [hasRefreshed, setHasRefreshed] = useState(false);
+  const [visible, setVisible] = useState(false);
+
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const checkUser = async () => {
@@ -117,9 +125,50 @@ export default function Home() {
     }
   }, [settingsVisible]);
 
+  const handleReviewIncompleteDeck = async () => {
+    try {
+      setLoading(true);
+
+      const allDecks = await getUserDecks(user.$id);
+      const incompleteDecks = [];
+
+      for (const deck of allDecks) {
+        const cards = await getUserCards(deck.$id);
+        const hasIncompleteCards = cards.some((card) => !card.status); // Check for at least one incomplete card
+
+        if (hasIncompleteCards) {
+          incompleteDecks.push(deck); // Add deck to incomplete decks if it has incomplete cards
+        }
+      }
+
+      if (incompleteDecks.length === 0) {
+        setVisible(true);
+        setLoading(false);
+        return;
+      }
+
+      const randomDeck =
+        incompleteDecks[Math.floor(Math.random() * incompleteDecks.length)]; // Select random incomplete deck
+
+      router.push({
+        pathname: "/(learn)/[id]",
+        params: { id: randomDeck.$id }, // Pass the deckId as id
+      });
+    } catch (error) {
+      console.error("Error selecting random deck:", error);
+      Alert.alert("Error", "Failed to start review for incomplete deck.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return <Loading />;
+  }
+
   return (
     <LinearGradient
-      colors={["#7C3AED", "#000000"]}
+      colors={["#7C3AED", "#0A0A0A"]}
       start={{ x: 0, y: 0 }}
       end={{ x: 0, y: 0.3 }}
       className="flex-1"
@@ -158,12 +207,15 @@ export default function Home() {
           </View>
         </View>
 
-        {/* AI Creation Section */}
+        {/* Smart Study Mode */}
         <View className="mb-5">
           <Text className="text-xl font-SegoeuiBold text-white mb-3">
-            Get started
+            Smart Study Mode
           </Text>
-          <TouchableOpacity /* onPress={() => router.push(`/learn/${randomDeckId}`)}  */className="rounded-2xl overflow-hidden border-2 border-secondaryBG">
+          <TouchableOpacity
+            onPress={handleReviewIncompleteDeck}
+            className="rounded-2xl overflow-hidden border-2 border-secondaryBG"
+          >
             <LinearGradient
               colors={["#A65EE6", "#000000"]}
               start={{ x: 2, y: 4 }}
@@ -172,7 +224,7 @@ export default function Home() {
             >
               <View className="flex flex-row justify-between items-center px-6">
                 <Text className="text-xl text-white font-Segoeui py-7">
-                  Study for today
+                  Review Incomplete Decks
                 </Text>
                 <Image source={icons.ArrowTopRight} style={styles.iconArrow} />
               </View>
@@ -195,19 +247,13 @@ export default function Home() {
             data={decks as { deckName: string; $id: string }[]}
             keyExtractor={(item) => item.$id}
             renderItem={({ item }) => (
-              <DeckListHome
-                deckName={item.deckName}
-                deckId={item.$id}
-              />
+              <DeckListHome deckName={item.deckName} deckId={item.$id} />
             )}
             ListEmptyComponent={() => (
-              <Text className="text-center text-white mt-5">
+              <Text className="text-center text-secondary mt-5">
                 No decks available
               </Text>
             )}
-            /*             refreshControl={
-              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-            } */
           />
         </View>
       </SafeAreaView>
@@ -260,6 +306,12 @@ export default function Home() {
           </View>
         </View>
       </Modal>
+      <SuccessModal
+        title="Yay! 🎉"
+        subtitle="You have completed all your decks."
+        onClose={() => setVisible(false)}
+        isVisible={visible}
+      />
     </LinearGradient>
   );
 }

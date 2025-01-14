@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Image } from "react-native";
 import { Text } from "react-native";
 import icons from "@/constants/icons";
@@ -19,24 +19,27 @@ const ErrorModal: React.FC<ErrorModalProps> = ({
   isVisible,
   onClose,
 }) => {
+  const [isModalVisible, setModalVisible] = useState(isVisible);
+
   useEffect(() => {
-    // Automatically updates modal visibility when prop changes
+    setModalVisible(isVisible);
   }, [isVisible]);
 
   const handleContinue = () => {
-    onClose(); // Close modal on button press
+    setModalVisible(false);
+    onClose();
   };
 
   return (
     <Modal
-      isVisible={isVisible}
+      isVisible={isModalVisible}
       onBackdropPress={handleContinue}
       onSwipeComplete={handleContinue}
       swipeDirection="down"
       className="flex justify-center"
       onBackButtonPress={handleContinue}
     >
-      <View className="p-6 bg-secondaryBG rounded-3xl items-center">
+      <View className="p-4 bg-layer2 rounded-3xl items-center">
         <Image source={icons.FailPrimary} style={styles.iconBig} />
         <Text className="font-SegoeuiBold text-white text-center text-2xl mb-2">
           {title}
@@ -52,7 +55,7 @@ const ErrorModal: React.FC<ErrorModalProps> = ({
 
 const styles = StyleSheet.create({
   icon: { width: 30, height: 30 },
-  iconBig: { width: 65, height: 65, marginBottom: 10 },
+  iconBig: { width: 65, height: 65, marginBottom: 15 },
 });
 
 export default ErrorModal;

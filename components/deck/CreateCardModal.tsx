@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { Children, useEffect, useState } from "react";
 import { View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import Modal from "react-native-modal";
@@ -5,7 +6,7 @@ import { Text } from "react-native";
 import PrimaryButton from "../buttons/PrimaryButton";
 import { createCard } from "@/lib/appwrite";
 import { useSuccessModal } from "@/context/ModalContext";
-import ErrorModal from "./ErrorModal";
+import ErrorModal from "../modals/ErrorModal";
 
 const CreateCardModal: React.FC<{
   isVisible: boolean;
