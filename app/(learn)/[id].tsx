@@ -38,7 +38,7 @@ const ReviewDeck = () => {
   const [loading, setLoading] = useState(true);
   const flipAnim = useSharedValue(0);
 
-  const [deckName, setDeckName] = useState(""); // New state for deck name
+  const [deckName, setDeckName] = useState("");
 
   useEffect(() => {
     const fetchCards = async () => {
