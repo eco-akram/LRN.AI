@@ -78,6 +78,10 @@ export default function Home() {
     }, [refetch])
   );
 
+  const handlePress = () => {
+    router.push("/(learn)/(advancedLearn)/[id]");
+  };
+
   const handleLogout = async () => {
     try {
       await signOut();
@@ -164,7 +168,8 @@ export default function Home() {
           <Text className="text-xl font-SegoeuiBold text-white mb-3">
             Get started
           </Text>
-          <TouchableOpacity /* onPress={() => router.push(`/learn/${randomDeckId}`)}  */className="rounded-2xl overflow-hidden border-2 border-secondaryBG">
+          <TouchableOpacity
+            onPress={handlePress} /* onPress={() => router.push(`/learn/${randomDeckId}`)}  */className="rounded-2xl overflow-hidden border-2 border-secondaryBG">
             <LinearGradient
               colors={["#A65EE6", "#000000"]}
               start={{ x: 2, y: 4 }}
