@@ -36,6 +36,8 @@ const ReviewDeck = () => {
   const [isEmptyDeck, setIsEmptyDeck] = useState(false);
   const [isReviewComplete, setIsReviewComplete] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [correctCount, setCorrectCount] = useState(0);
+  const [incorrectCount, setIncorrectCount] = useState(0);
   const flipAnim = useSharedValue(0);
 
   const [deckName, setDeckName] = useState("");
@@ -78,26 +80,26 @@ const ReviewDeck = () => {
     fetchCards();
   }, [deckId]);
 
-  const handleIncorrectCard = () => {
-    const currentCard = cards[currentIndex];
-    const updatedCards = [...cards];
-    updatedCards.splice(currentIndex, 1);
-    updatedCards.push(currentCard); // Push to back of list
+  const handleNextCard = (isCorrect: boolean) => {
+    if (isCorrect) {
+      setCorrectCount((prev) => prev + 1);
+    } else {
+      setIncorrectCount((prev) => prev + 1);
 
-    setCards(updatedCards);
-    if (currentIndex >= updatedCards.length - 1) {
-      setCurrentIndex(0); // Reset to first card if last card
+      // Add the current card back to the end of the deck
+      setCards((prevCards) => [...prevCards, prevCards[currentIndex]]);
     }
-    setShowAnswer(false);
-  };
 
-  const handleCorrectCard = () => {
     if (currentIndex < cards.length - 1) {
       setCurrentIndex((prev) => prev + 1);
-      setShowAnswer(false);
     } else {
-      setIsReviewComplete(true); // End review
+      if (isCorrect || cards.length === 1) {
+        setIsReviewComplete(true);
+      } else {
+        setCurrentIndex((prev) => prev + 1);
+      }
     }
+    setShowAnswer(false);
   };
 
   const handleCardPress = () => {
@@ -219,14 +221,14 @@ const ReviewDeck = () => {
             <View className="flex-1">
               <IncorrectButton
                 title="Incorrect"
-                onPress={handleIncorrectCard} // Move to next card
+                onPress={() => handleNextCard(false)} // Move to next card
                 whenChange={showAnswer}
               />
             </View>
             <View className="flex-1">
               <CorrectButton
                 title="Correct"
-                onPress={handleCorrectCard} // Move to next card
+                onPress={() => handleNextCard(true)} // Move to next card
                 whenChange={showAnswer}
               />
             </View>
