@@ -43,8 +43,8 @@ export default function Home() {
   const [confirmation, setConfirmation] = useState("");
 
   const { data: decks, refetch } = useAppwrite(() => getUserDecks(user.$id));
-  const [refreshing, setRefreshing] = useState(false);
-  const [hasRefreshed, setHasRefreshed] = useState(false);
+/*   const { decks, refetchDecks, loading } = useDeckContext(); */
+
   const [visible, setVisible] = useState(false);
 
   const [loading, setLoading] = useState(false);
@@ -67,12 +67,6 @@ export default function Home() {
     $id: string;
     username: string;
   }
-
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await refetch();
-    setRefreshing(false);
-  };
 
   useFocusEffect(
     useCallback(() => {
