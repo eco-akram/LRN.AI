@@ -100,15 +100,6 @@ const ReviewDeck = () => {
     }
   };
 
-  const handleNextCard = () => {
-    if (currentIndex < cards.length - 1) {
-      setCurrentIndex((prev) => prev + 1);
-      setShowAnswer(false);
-    } else {
-      setIsReviewComplete(true);
-    }
-  };
-
   const handleCardPress = () => {
     flipAnim.value = withTiming(flipAnim.value === 0 ? 1 : 0, {
       duration: 300,

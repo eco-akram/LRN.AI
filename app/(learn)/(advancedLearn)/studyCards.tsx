@@ -21,6 +21,7 @@ import Animated, {
 
 interface Card {
   cardId: string;
+  cardName: string;
   frontText: string;
   backText: string;
   status: boolean;
@@ -37,7 +38,7 @@ const StudyCards = () => {
   const [loading, setLoading] = useState(true);
   const [correctCount, setCorrectCount] = useState(0);
   const [incorrectCount, setIncorrectCount] = useState(0);
-  const flipAnim = useSharedValue(0); // Animation shared value
+  const flipAnim = useSharedValue(0);
 
   useEffect(() => {
     const fetchCards = async () => {
@@ -56,6 +57,7 @@ const StudyCards = () => {
           allCards.push(
             ...fetchedCards.map((card) => ({
               cardId: card.$id,
+              cardName: card.cardName,
               frontText: card.frontText ?? "No question provided",
               backText: card.backText ?? "No answer provided",
               status: card.status ?? false,
@@ -168,8 +170,11 @@ const StudyCards = () => {
 
         {/* CARD CONTAINER */}
         <View className="flex-1 justify-center items-center">
+          <Text className="text-white font-SegoeuiBold text-2xl text-center">
+            {cards[currentIndex]?.cardName}
+          </Text>
           <TouchableOpacity onPress={handleCardPress}>
-            <Animated.View style={[animatedStyle, styles.gradient]}>
+            <Animated.View style={[animatedStyle]}>
               <LinearGradient
                 colors={["#1B1C1D", "#0A0A0A"]}
                 start={{ x: 1, y: 0 }}

@@ -115,7 +115,8 @@ export default function Home() {
     }
   }, [settingsVisible]);
 
-  const handleReviewIncompleteDeck = async () => {
+  /* const handleReviewIncompleteDeck = async () => {
+
     try {
 
       const allDecks = await getUserDecks(user.$id);
@@ -146,6 +147,11 @@ export default function Home() {
       console.error("Error selecting random deck:", error);
       Alert.alert("Error", "Failed to start review for incomplete deck.");
     }
+  };
+ */
+  
+  const handlePress = () => {
+    router.push("/(learn)/(advancedLearn)/[id]");
   };
 
   if (loading) {
@@ -199,7 +205,7 @@ export default function Home() {
             Smart Study Mode
           </Text>
           <TouchableOpacity
-            onPress={handleReviewIncompleteDeck}
+            onPress={handlePress}
             className="rounded-2xl overflow-hidden border-2 border-secondaryBG"
           >
             <LinearGradient
@@ -210,7 +216,7 @@ export default function Home() {
             >
               <View className="flex flex-row justify-between items-center px-6">
                 <Text className="text-xl text-white font-Segoeui py-7">
-                  Review Incomplete Decks
+                  Review Multiple Decks
                 </Text>
                 <Image source={icons.ArrowTopRight} style={styles.iconArrow} />
               </View>
