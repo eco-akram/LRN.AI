@@ -21,8 +21,10 @@ import {
   getCurrentUser,
 } from "@/lib/appwrite";
 import Modal from "react-native-modal";
+import SuccessModal from "@/components/modals/SuccessModal";
+import ErrorModal from "@/components/modals/ErrorModal";
 import { useGlobalContext } from "@/context/GlobalProvider";
-import { router } from "expo-router";
+import { useRouter } from "expo-router";
 import useAppwrite from "@/lib/useAppwrite";
 import { HelloWave } from "@/components/HelloWave";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
@@ -41,6 +43,10 @@ export default function Home() {
   const { data: decks, refetch } = useAppwrite(() => getUserDecks(user.$id));
   const [refreshing, setRefreshing] = useState(false);
   const [hasRefreshed, setHasRefreshed] = useState(false);
+  const router = useRouter();
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     const checkUser = async () => {
@@ -85,12 +91,21 @@ export default function Home() {
   const handleLogout = async () => {
     try {
       await signOut();
-      Alert.alert("Logged Out", "You have been logged out.");
-      router.replace("/login");
+      setShowSuccessModal(true);
     } catch (error) {
       console.error("Error logging out:", error);
-      Alert.alert("Error", "Failed to log out.");
+      setErrorMessage("Failed to log out.");
+      setShowErrorModal(true);
     }
+  };
+
+  const handleCloseSuccessModal = () => {
+    setShowSuccessModal(false);
+    router.replace("/login");
+  };
+
+  const handleCloseErrorModal = () => {
+    setShowErrorModal(false);
   };
 
   const handleChangeUsername = async () => {
@@ -255,9 +270,9 @@ export default function Home() {
               />
               <DangerButton title="Log out" onPress={handleLogout} />
               <View className="flex flex-row justify-evenly mt-5">
-                <Text className="font-Segoeui text-secondary w-1/2">
-                  Terms of service
-                </Text>
+              <TouchableOpacity onPress={() => router.replace('/termsOfService')}>
+        <Text className="font-Segoeui text-secondary w-1/2">Terms of service</Text>
+      </TouchableOpacity>
                 <Text className="font-Segoeui text-secondary w-1/3">
                   Privacy Policy
                 </Text>
@@ -266,6 +281,25 @@ export default function Home() {
           </View>
         </View>
       </Modal>
+        {/* Success Modal */}
+        {showSuccessModal && (
+        <SuccessModal
+          title="Logged Out"
+          subtitle="You have been logged out."
+          isVisible={showSuccessModal}
+          onClose={handleCloseSuccessModal}
+        />
+      )}
+
+      {/* Error Modal */}
+      {showErrorModal && (
+        <ErrorModal
+          title="Error"
+          subtitle={errorMessage}
+          isVisible={showErrorModal}
+          onClose={handleCloseErrorModal}
+        />
+      )}
     </LinearGradient>
   );
 }

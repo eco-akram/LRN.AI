@@ -4,6 +4,7 @@ import { Text } from "react-native";
 type AccentButtonProps = {
   onPress: () => void; // Function called when the button is pressed
   title: string; // The text displayed on the button
+  disabled?: boolean; //
 };
 
 const AccentButton: React.FC<AccentButtonProps> = ({
