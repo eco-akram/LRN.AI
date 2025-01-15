@@ -119,6 +119,13 @@ const TermsOfService = () => {
       <Text style={styles.text}>
         If you have questions or concerns about these ToS, you may contact us at: [Insert Contact Email or Address]
       </Text>
+      <Text style={styles.sectionTitle}>Program Creators</Text>
+              <Text style={styles.text}>
+              Klaipėda State College, Informatics and Electrical Engineering Department
+              </Text>
+              <Text style={styles.text}>
+               I21-2{"\n"}Lukas Čiesna,{"\n"}Akram Abdel-Latif
+              </Text>
     </ScrollView>
     </SafeAreaView>
   );

@@ -270,12 +270,12 @@ export default function Home() {
               />
               <DangerButton title="Log out" onPress={handleLogout} />
               <View className="flex flex-row justify-evenly mt-5">
-              <TouchableOpacity onPress={() => router.replace('/termsOfService')}>
-        <Text className="font-Segoeui text-secondary w-1/2">Terms of service</Text>
-      </TouchableOpacity>
-                <Text className="font-Segoeui text-secondary w-1/3">
-                  Privacy Policy
-                </Text>
+              <TouchableOpacity onPress={() => router.replace('/termsOfService')} style={styles.linkContainer}>
+                 <Text className="font-Segoeui text-secondary">Terms of service</Text>
+                 </TouchableOpacity>
+                 <TouchableOpacity onPress={() => router.replace('/privacyPolicy')} style={styles.linkContainer}>
+                <Text className="font-Segoeui text-secondary">Privacy Policy</Text>
+               </TouchableOpacity>
               </View>
             </View>
           </View>
@@ -312,5 +312,10 @@ const styles = {
   iconArrow: {
     width: 45,
     height: 45,
+  },
+  linkContainer: {
+    paddingVertical: 10, // Increase vertical padding
+    paddingHorizontal: 20, // Increase horizontal padding
+    marginHorizontal: 10, // Add some horizontal margin to space out the links
   },
 };
