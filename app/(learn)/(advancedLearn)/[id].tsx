@@ -14,6 +14,7 @@ import Loading from "@/components/Loading";
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { DeckProvider } from "@/context/DeckProvider";
 
 interface Deck {
   id: string;

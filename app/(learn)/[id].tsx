@@ -146,7 +146,7 @@ const ReviewDeck = () => {
       <View className="flex-1 justify-center items-center bg-black p-5">
         <SuccessModal
           title="Review Complete"
-          subtitle="You have finished reviewing this deck."
+          subtitle={`You answered ${correctCount} correctly and ${incorrectCount} incorrectly.`}
           isVisible={true}
           onClose={() => router.back()}
         />

@@ -25,14 +25,14 @@ import { useGlobalContext } from "@/context/GlobalProvider";
 import { router } from "expo-router";
 import useAppwrite from "@/lib/useAppwrite";
 
-import SmartStudyButton from "@/components/home/SmartStudyButton";
-
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import DangerButton from "@/components/buttons/DangerButton";
 import FormInput from "@/components/buttons/FormInput";
 import DeckListHome from "@/components/home/DeckListHome";
 import Loading from "@/components/Loading";
 import SuccessModal from "@/components/modals/SuccessModal";
+import UserStatistics from "@/components/home/UserStatistics";
+
 import { useDeckContext } from "@/context/DeckProvider";
 
 export default function Home() {
@@ -43,7 +43,7 @@ export default function Home() {
   const [confirmation, setConfirmation] = useState("");
   const [visible, setVisible] = useState(false);
 
-/*   const { data: decks, refetch } = useAppwrite(() => getUserDecks(user.$id)); */
+  /*   const { data: decks, refetch } = useAppwrite(() => getUserDecks(user.$id)); */
   const { decks, refetchDecks, loading } = useDeckContext();
 
   useEffect(() => {
@@ -149,7 +149,7 @@ export default function Home() {
     }
   };
  */
-  
+
   const handlePress = () => {
     router.push("/(learn)/(advancedLearn)/[id]");
   };
@@ -184,20 +184,7 @@ export default function Home() {
         </View>
 
         {/* Streak and Stats Section */}
-        <View className="flex-row justify-between mb-5">
-          <View className="bg-layer2 border-2 border-layer3 justify-center rounded-xl p-5 flex-2 mr-2">
-            <Text className="text-xl font-SegoeuiBold text-white">Streak</Text>
-            <Text className="text-2xl font-SegoeuiBold text-white">🔥 7</Text>
-          </View>
-          <View className="bg-layer2 border-2 border-layer3 rounded-xl p-5 flex-1 ml-2">
-            <Text className="text-xl font-SegoeuiBold text-white">
-              Today you reviewed:
-            </Text>
-            <Text className="text-2xl font-SegoeuiBold text-white mt-1">
-              📈 21
-            </Text>
-          </View>
-        </View>
+        <UserStatistics />
 
         {/* Smart Study Mode */}
         <View className="mb-5">

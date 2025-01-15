@@ -10,9 +10,11 @@ import * as SystemUI from "expo-system-ui";
 
 import "../global.css";
 import { View } from "react-native";
+
 import GlobalProvider from "../context/GlobalProvider";
 import { ModalProvider } from "@/context/ModalContext";
 import { DeckProvider } from "@/context/DeckProvider";
+import { StatisticsProvider } from "@/context/StatisticsProvider";
 
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
@@ -59,25 +61,27 @@ export default function RootLayout() {
       <GlobalProvider>
         <DeckProvider>
           <ModalProvider>
-            <Stack>
-              <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              <Stack.Screen
-                name="(learn)"
-                options={{ headerShown: false, animation: "fade" }}
-              />
-              <Stack.Screen
-                name="(auth)"
-                options={{ headerShown: false, animation: "fade" }}
-              />
-              <Stack.Screen
-                name="index"
-                options={{ headerShown: false, animation: "fade" }}
-              />
-              <Stack.Screen
-                name="+not-found"
-                options={{ headerShown: false }}
-              />
-            </Stack>
+            <StatisticsProvider>
+              <Stack>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen
+                  name="(learn)"
+                  options={{ headerShown: false, animation: "fade" }}
+                />
+                <Stack.Screen
+                  name="(auth)"
+                  options={{ headerShown: false, animation: "fade" }}
+                />
+                <Stack.Screen
+                  name="index"
+                  options={{ headerShown: false, animation: "fade" }}
+                />
+                <Stack.Screen
+                  name="+not-found"
+                  options={{ headerShown: false }}
+                />
+              </Stack>
+            </StatisticsProvider>
           </ModalProvider>
         </DeckProvider>
       </GlobalProvider>
