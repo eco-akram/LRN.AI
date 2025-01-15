@@ -11,6 +11,8 @@ interface DeckListHomeProps {
   deckId: string;
 }
 
+// TODO: COMPLETE INCOMPLETE NOT REFETCHING
+
 const DeckListHome: React.FC<DeckListHomeProps> = ({ deckName, deckId }) => {
   const [deckStatus, setDeckStatus] = useState<
     "completed" | "incomplete" | "no-cards"
@@ -37,7 +39,7 @@ const DeckListHome: React.FC<DeckListHomeProps> = ({ deckName, deckId }) => {
           setDeckStatus(allCompleted ? "completed" : "incomplete");
         }
 
-        /*         console.log("Fetching cards...", cardsList); */
+        console.log("Fetching cards...");
         // Trigger the parent to refresh the list after fetching cards
         return cardNum;
       } catch (error) {
@@ -46,19 +48,18 @@ const DeckListHome: React.FC<DeckListHomeProps> = ({ deckName, deckId }) => {
     };
 
     fetchCards();
-  }, [deckId]);
+  }, [cardNum, deckId]);
 
   return (
     <TouchableOpacity
       onPress={() =>
         router.push({
           pathname: "/(learn)/[id]",
-          params: { id: deckId }, // Pass the deckId as id
+          params: { id: deckId },
         })
       }
     >
       <View className="flex-row justify-between items-center h-full w-full mx-2">
-        {/* <View className="bg-layer3 border-2 border-secondary p-4 h-full w-40 rounded-lg mt-5 flex-col justify-between "> */}
         <LinearGradient
           colors={["#1B1C1D", "#141414"]}
           start={{ x: 1, y: 0 }}

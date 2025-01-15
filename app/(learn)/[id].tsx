@@ -19,6 +19,8 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 
+import { useStatisticsContext } from "@/context/StatisticsProvider";
+
 interface Card {
   cardId: string;
   cardName: string;
@@ -39,6 +41,9 @@ const ReviewDeck = () => {
   const [correctCount, setCorrectCount] = useState(0);
   const [incorrectCount, setIncorrectCount] = useState(0);
   const flipAnim = useSharedValue(0);
+
+  const { incrementCardsReviewed, streak, cardsReviewed } =
+    useStatisticsContext();
 
   const [deckName, setDeckName] = useState("");
 
@@ -80,9 +85,10 @@ const ReviewDeck = () => {
     fetchCards();
   }, [deckId]);
 
-  const handleNextCard = (isCorrect: boolean) => {
+  const handleNextCard = async (isCorrect: boolean) => {
     if (isCorrect) {
       setCorrectCount((prev) => prev + 1);
+      await incrementCardsReviewed(cards[currentIndex]?.cardId); // Increment card review count
     } else {
       setIncorrectCount((prev) => prev + 1);
 

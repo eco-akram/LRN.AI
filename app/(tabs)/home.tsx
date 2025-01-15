@@ -43,7 +43,6 @@ export default function Home() {
   const [confirmation, setConfirmation] = useState("");
   const [visible, setVisible] = useState(false);
 
-  /*   const { data: decks, refetch } = useAppwrite(() => getUserDecks(user.$id)); */
   const { decks, refetchDecks, loading } = useDeckContext();
 
   useEffect(() => {
@@ -53,7 +52,7 @@ export default function Home() {
         setUser(currentUser);
       } catch (error) {
         console.error("Error fetching current user:", error);
-        router.replace("/login"); // Navigate to the login screen if not authenticated
+        router.replace("/login");
       }
     };
 
@@ -114,41 +113,6 @@ export default function Home() {
       );
     }
   }, [settingsVisible]);
-
-  /* const handleReviewIncompleteDeck = async () => {
-
-    try {
-
-      const allDecks = await getUserDecks(user.$id);
-      const incompleteDecks = [];
-
-      for (const deck of allDecks) {
-        const cards = await getUserCards(deck.$id);
-        const hasIncompleteCards = cards.some((card) => !card.status); // Check for at least one incomplete card
-
-        if (hasIncompleteCards) {
-          incompleteDecks.push(deck); // Add deck to incomplete decks if it has incomplete cards
-        }
-      }
-
-      if (incompleteDecks.length === 0) {
-        setVisible(true);
-        return;
-      }
-
-      const randomDeck =
-        incompleteDecks[Math.floor(Math.random() * incompleteDecks.length)]; // Select random incomplete deck
-
-      router.push({
-        pathname: "/(learn)/[id]",
-        params: { id: randomDeck.$id }, // Pass the deckId as id
-      });
-    } catch (error) {
-      console.error("Error selecting random deck:", error);
-      Alert.alert("Error", "Failed to start review for incomplete deck.");
-    }
-  };
- */
 
   const handlePress = () => {
     router.push("/(learn)/(advancedLearn)/[id]");
@@ -285,6 +249,8 @@ export default function Home() {
           </View>
         </View>
       </Modal>
+      
+      {/* Success Modal */}
       <SuccessModal
         title="Yay! 🎉"
         subtitle="You have completed all your decks."

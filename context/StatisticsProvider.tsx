@@ -41,6 +41,10 @@ export const StatisticsProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const fetchUserStats = async () => {
+      if (!user || !user.$id) {
+        console.warn("User not loaded yet");
+        return;
+      }
       try {
         const userStats = await getUserStatistics(user.$id);
         if (userStats) {
@@ -59,7 +63,7 @@ export const StatisticsProvider: React.FC<{ children: React.ReactNode }> = ({
     };
 
     fetchUserStats();
-  }, [user.$id]);
+  }, [user]);
 
   const incrementCardsReviewed = async (cardId: string) => {
     try {
@@ -72,15 +76,13 @@ export const StatisticsProvider: React.FC<{ children: React.ReactNode }> = ({
       // Update card status to true
       await updateCardStatus(cardId, true);
 
-      const isFirstReviewToday =
-        !userStats.reviewedToray || userStats.lastReviewedDate !== today;
+      const isFirstReviewToday = userStats.lastReviewedDate !== today;
 
       const updatedStats = {
         cardsReviewed: userStats.cardsReviewed + 1,
         currentStreak: isFirstReviewToday
           ? userStats.currentStreak + 1
           : userStats.currentStreak,
-        reviewedToray: true,
         lastReviewedDate: today,
       };
 

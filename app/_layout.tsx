@@ -21,10 +21,10 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
-/* SplashScreen.setOptions({
+SplashScreen.setOptions({
   duration: 1000,
   fade: true,
-}); */
+});
 
 export default function RootLayout() {
   useEffect(() => {
@@ -81,6 +81,7 @@ export default function RootLayout() {
                   options={{ headerShown: false }}
                 />
               </Stack>
+              <StatusBar style="light" />
             </StatisticsProvider>
           </ModalProvider>
         </DeckProvider>
