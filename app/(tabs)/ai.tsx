@@ -1,165 +1,152 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Text, TextInput, View, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AccentButton from "@/components/buttons/AccentButton";
 import axios from "axios";
+import { createAiDeck, getCurrentUser } from "@/lib/appwrite"; // Ensure you import getCurrentUser
 
 export default function AiScreen() {
-  const [inputText, setInputText] = useState(""); // For large text input
-  const [numQuestions, setNumQuestions] = useState(1); // Default value for number of questions
-  const [deck, setDeck] = useState<{ question: string; answer: string }[]>([]); // Generated deck state
-  const [loading, setLoading] = useState(false);
+    const [inputText, setInputText] = useState("");
+    const [numQuestions, setNumQuestions] = useState(1);
+    const [loading, setLoading] = useState(false);
+    const [userId, setUserId] = useState(null); // State to hold the current user's ID
+    const tokenLimit = 500;
 
-  const tokenLimit = 500; // Maximum token limit
+    // Fetch the current user ID on component mount
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const user = await getCurrentUser();
+                console.log("Fetched User:", user);
+                setUserId(user.userId); // Assuming user has userId property
+            } catch (error) {
+                console.error("Error fetching user:", error);
+                Alert.alert("Error", "Failed to fetch user information.");
+            }
+        };
 
-  const handleGenerate = async () => {
-    console.log("Generating questions...");
+        fetchUser();
+    }, []);
 
-    if (!inputText.trim()) {
-      Alert.alert("Input Required", "Please provide input text for question generation.");
-      console.log("Input is empty.");
-      return;
-    }
-
-    if (numQuestions > 20) {
-      Alert.alert("Limit Exceeded", "The maximum number of questions is 20.");
-      console.log("Number of questions exceeds limit.");
-      return;
-    }
-
-    setLoading(true);
-    console.log("Loading set to true.");
-
-    try {
-      const prompt = `
-        Based on the following input: "${inputText}", generate ${numQuestions} questions and answers.
-        Format each question and answer as:
-        Question: <generated question>
-        Answer: <generated answer>
-      `;
-
-      const response = await axios.post(
-        "https://api.cohere.ai/generate",
-        {
-          model: "command-xlarge-nightly",
-          prompt: prompt,
-          max_tokens: 500,
-          temperature: 0.7,
-          num_generations: 1,
-        },
-        {
-          headers: {
-            Authorization: `Bearer YOUR_API_KEY`, // Replace with your actual API key
-            "Content-Type": "application/json",
-          },
+    const handleGenerate = async () => {
+        if (numQuestions < 1 || numQuestions > 20) {
+            Alert.alert("Limit Exceeded", "The number of questions must be between 1 and 20.");
+            return;
         }
-      );
 
-      const generatedContent = response.data.generations[0]?.text;
+        if (!userId) {
+            Alert.alert("Error", "User not found. Please log in again.");
+            return; // Prevent deck creation if userId is not available
+        }
 
-      if (!generatedContent) {
-        throw new Error("Generated content is null");
-      }
+        setLoading(true);
 
-      const generatedDeck: { question: string; answer: string }[] = generatedContent
-        .split("\n")
-        .filter((line: string) => line.startsWith("Question") || line.startsWith("Answer"))
-        .reduce((acc: { question: string; answer: string }[], line: string, index: number, arr: string[]) => {
-          if (line.startsWith("Question")) {
-            const answerLine = arr[index + 1]?.startsWith("Answer") ? arr[index + 1] : "";
-            acc.push({
-              question: line.replace("Question: ", "").trim(),
-              answer: answerLine.replace("Answer: ", "").trim(),
-            });
-          }
-          return acc;
-        }, []);
+        console.log("User ID:", userId);
+        
 
-      setDeck(generatedDeck);
-    } catch (error) {
-      console.error("Error generating deck:", error);
-      Alert.alert("Error", "Failed to generate questions. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
+        try {
+            const prompt = `
+                Based on the following input: "${inputText}" The questions and answers has to be short and understandable, generate ${numQuestions} pairs of questions and answers.
+                Format each pair as:
+                Question: <generated question>
+                Answer: <generated answer>
+            `;
 
-  return (
-    <SafeAreaView className="flex-1 bg-layer1 px-5">
-      <ScrollView contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}>
-        <View className="mt-5 mb-2">
-          <Text className="font-SegoeuiBlack text-white text-3xl font-bold text-center">
-            LRN.AI
-          </Text>
-        </View>
+            console.log("Prompt:", prompt); // Debugging line
 
-        <Text className="text-secondary font-Segoeui text-base mb-5 text-center">
-          Add text for question generating
-        </Text>
+            const response = await axios.post(
+                "https://api.cohere.ai/generate",
+                {
+                    model: "command-xlarge-nightly",
+                    prompt: prompt,
+                    max_tokens: 500,
+                    temperature: 0.7,
+                    num_generations: 1,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer 3zUiPGP5a9KAm4PiOwwcdATxVrXKyk5URBspSk1G`, // Use environment variable in production
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
 
-        <View className="w-full relative">
-          <TextInput
-            className="bg-layer2 border-2 font-Segoeui border-layer3 text-white rounded-lg p-4 w-full h-48 text-base"
-            multiline
-            placeholder="Add text here..."
-            placeholderTextColor="#848484"
-            value={inputText}
-            onChangeText={(text) => {
-              if (text.length <= tokenLimit) {
-                setInputText(text);
-              }
-            }}
-          />
-          <Text className="text-secondary font-Segoeui text-sm absolute bottom-2 right-4">
-            {inputText.length}/{tokenLimit} Characters
-          </Text>
-        </View>
+            console.log("API Response:", response.data); // Debugging line
 
-        <View className="items-center mt-6">
-          <Text className="text-secondary font-Segoeui text-base mb-2">
-            Number of questions
-          </Text>
-          <View className="flex-row items-center justify-center">
-            <TouchableOpacity
-              onPress={() => setNumQuestions(Math.max(1, numQuestions - 1))}
-            >
-              <Text className="text-white text-3xl px-4">-</Text>
-            </TouchableOpacity>
-            <Text className="text-white text-xl mx-2">{numQuestions}</Text>
-            <TouchableOpacity
-              onPress={() => setNumQuestions(Math.min(20, numQuestions + 1))}
-            >
-              <Text className="text-white text-3xl px-4">+</Text>
-            </TouchableOpacity>
-          </View>
-          <Text className="text-secondary font-Segoeui text-sm mt-2">
-            Limit (20) Questions
-          </Text>
-        </View>
+            const generatedContent = response.data?.text;
 
-        <AccentButton title={loading ? "Generating..." : "Generate"} onPress={handleGenerate} disabled={loading} />
+            if (!generatedContent || generatedContent.trim() === "") {
+                throw new Error("No content generated. Please try again.");
+            }
 
-        {deck.length > 0 && (
-          <View className="mt-10 w-full">
-            <Text className="text-white text-xl font-SegoeuiBold mb-4">
-              Generated Deck:
-            </Text>
-            {deck.map((card, index) => (
-              <View
-                key={index}
-                className="mb-4 p-4 bg-layer2 rounded-lg border border-layer3"
-              >
-                <Text className="text-white font-Segoeui text-base">
-                  Q{index + 1}: {card.question}
+            const lines = generatedContent.trim().split("\n");
+            const generatedCards = [];
+
+            for (let i = 0; i < lines.length; i++) {
+                if (lines[i].startsWith("Question:")) {
+                    const question = lines[i].replace("Question: ", "").trim();
+                    const answer = lines[i + 1]?.startsWith("Answer:") ? lines[i + 1].replace("Answer: ", "").trim() : "";
+                    if (question && answer) {
+                        const cardName = question.length > 20 ? question.substring(0, 20) : question;
+                        generatedCards.push({ frontText: question, backText: answer, cardName: cardName });
+                    }
+                    i++; // Move to the next line after the answer
+                }
+            }
+
+            const limitedCards = generatedCards.slice(0, numQuestions);
+
+            console.log("Generated Cards:", limitedCards); // Debugging line
+
+            if (limitedCards.length === 0) {
+                throw new Error("No valid question-answer pairs generated. Please try again.");
+            }
+
+            const deckName = `Deck ${new Date().toLocaleString()}`;
+
+            // Pass the userId when creating the deck
+            await createAiDeck(deckName, limitedCards, userId);
+
+            Alert.alert("Success", `Deck "${deckName}" has been created with ${limitedCards.length} cards.`);
+        } catch (error) {
+            console.error("Error generating deck:", error);
+            Alert.alert("Error", "Failed to generate deck. Please try again.");
+        } finally {
+            setLoading(false);
+        }
+    };
+    
+
+    return (
+        <SafeAreaView className="flex-1 bg-layer1 px-5">
+            <ScrollView contentContainerStyle={{ flexGrow: 1, alignItems: "center" }}>
+                <Text className="font-SegoeuiBlack text-white text-3xl font-bold mt-5 mb-2 text-center">
+                    LRN.AI
                 </Text>
-                <Text className="text-secondary font-Segoeui text-sm mt-2">
-                  A: {card.answer}
-                </Text>
-              </View>
-            ))}
-          </View>
-        )}
-      </ScrollView>
-    </SafeAreaView>
-  );
+                <TextInput
+                    className="bg-layer2 border-2 font-Segoeui border-layer3 text-white rounded-lg p-4 w-full h-48 text-base"
+                    multiline
+                    placeholder="Add text for question generating..."
+                    placeholderTextColor="#848484"
+                    value={inputText}
+                    onChangeText={(text) => {
+                        if (text.length <= tokenLimit) setInputText(text);
+                    }}
+                />
+                <View className="items-center mt-6">
+                    <Text className="text-secondary font-Segoeui text-base mb-2">Number of questions</Text>
+                    <View className="flex-row items-center">
+                        <TouchableOpacity onPress={() => setNumQuestions(Math.max(1, numQuestions - 1))}>
+                            <Text className="text-white text-3xl px-4">-</Text>
+                        </TouchableOpacity>
+                        <Text className="text-white text-xl mx-2">{numQuestions}</Text>
+                        <TouchableOpacity onPress={() => setNumQuestions(Math.min(20, numQuestions + 1))}>
+                            <Text className="text-white text-3xl px-4">+</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+                <AccentButton title={loading ? "Generating..." : "Generate"} onPress={handleGenerate} disabled={loading} />
+            </ScrollView>
+        </SafeAreaView>
+    );
 }
