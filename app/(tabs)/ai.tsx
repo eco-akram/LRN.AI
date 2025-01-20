@@ -66,7 +66,7 @@ export default function AiScreen() {
         },
         {
           headers: {
-            Authorization: `Bearer [Api-Raktas]`,
+            Authorization: `Bearer 3zUiPGP5a9KAm4PiOwwcdATxVrXKyk5URBspSk1G`,
             "Content-Type": "application/json",
           },
         }
