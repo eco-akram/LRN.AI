@@ -50,7 +50,6 @@ export default function Decks() {
   useEffect(() => {
     fetchDecks();
   }, []);
-
   
 
   const handleAddDeck = async () => {
