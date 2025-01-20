@@ -13,17 +13,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import icons from "@/constants/icons";
-import {
-  getUserDecks,
-  changeUserName,
-  signOut,
-  getCurrentUser,
-  getUserCards,
-} from "@/lib/appwrite";
+import { changeUserName, signOut, getCurrentUser } from "@/lib/appwrite";
 import Modal from "react-native-modal";
 import { useGlobalContext } from "@/context/GlobalProvider";
 import { router } from "expo-router";
-import useAppwrite from "@/lib/useAppwrite";
 
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import DangerButton from "@/components/buttons/DangerButton";
@@ -187,10 +180,15 @@ export default function Home() {
             className="flex-1 rounded-lg w-full"
             horizontal={true}
             contentContainerStyle={{ paddingBottom: 20 }}
-            data={decks as { deckName: string; $id: string }[]}
+            data={decks}
             keyExtractor={(item) => item.$id}
             renderItem={({ item }) => (
-              <DeckListHome deckName={item.deckName} deckId={item.$id} />
+              <DeckListHome
+                deckName={item.deckName}
+                deckId={item.$id}
+                cardCount={item.cardCount}
+                status={item.status}
+              />
             )}
             ListEmptyComponent={() => (
               <Text className="text-center text-secondary mt-5">
@@ -249,7 +247,7 @@ export default function Home() {
           </View>
         </View>
       </Modal>
-      
+
       {/* Success Modal */}
       <SuccessModal
         title="Yay! 🎉"

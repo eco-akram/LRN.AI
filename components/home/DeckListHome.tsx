@@ -9,12 +9,19 @@ import ErrorModal from "../modals/ErrorModal";
 interface DeckListHomeProps {
   deckName: string;
   deckId: string;
+  cardCount: number;
+  status: "completed" | "incomplete" | "no-cards";
 }
 
 // TODO: COMPLETE INCOMPLETE NOT REFETCHING
 
-const DeckListHome: React.FC<DeckListHomeProps> = ({ deckName, deckId }) => {
-  const [deckStatus, setDeckStatus] = useState<
+const DeckListHome: React.FC<DeckListHomeProps> = ({
+  deckName,
+  deckId,
+  cardCount,
+  status,
+}) => {
+  /*   const [deckStatus, setDeckStatus] = useState<
     "completed" | "incomplete" | "no-cards"
   >("no-cards");
   const [cardNum, setCardNum] = useState(0);
@@ -37,6 +44,7 @@ const DeckListHome: React.FC<DeckListHomeProps> = ({ deckName, deckId }) => {
         } else {
           const allCompleted = cards.every((card) => card.status === true);
           setDeckStatus(allCompleted ? "completed" : "incomplete");
+          console.log("Setting deck status:", deckStatus, deckName);
         }
 
         console.log("Fetching cards...");
@@ -48,7 +56,7 @@ const DeckListHome: React.FC<DeckListHomeProps> = ({ deckName, deckId }) => {
     };
 
     fetchCards();
-  }, [cardNum, deckId]);
+  }, [cardNum, deckId]); */
 
   return (
     <TouchableOpacity
@@ -71,21 +79,21 @@ const DeckListHome: React.FC<DeckListHomeProps> = ({ deckName, deckId }) => {
               {deckName}
             </Text>
             <Text className="font-SegoeuiBold  text-secondary">
-              {cardNum} {cardNum === 1 ? "Card" : "Cards"}
+              {cardCount} {cardCount === 1 ? "Card" : "Cards"}
             </Text>
           </View>
           <Text
             className={`p-1 text-center rounded-xl text-sm ${
-              deckStatus === "completed"
+              status === "completed"
                 ? "bg-green-500"
-                : deckStatus === "incomplete"
+                : status === "incomplete"
                   ? "bg-red-500"
                   : "bg-gray-500"
             } text-white`}
           >
-            {deckStatus === "completed"
+            {status === "completed"
               ? "Completed"
-              : deckStatus === "incomplete"
+              : status === "incomplete"
                 ? "Incomplete"
                 : "No Cards"}
           </Text>

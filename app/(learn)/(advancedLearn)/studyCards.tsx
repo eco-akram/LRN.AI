@@ -18,6 +18,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
+import { useStatisticsContext } from "@/context/StatisticsProvider";
 
 interface Card {
   cardId: string;
@@ -38,7 +39,10 @@ const StudyCards = () => {
   const [loading, setLoading] = useState(true);
   const [correctCount, setCorrectCount] = useState(0);
   const [incorrectCount, setIncorrectCount] = useState(0);
+
   const flipAnim = useSharedValue(0);
+
+  const { incrementCardsReviewed } = useStatisticsContext();
 
   useEffect(() => {
     const fetchCards = async () => {
@@ -81,9 +85,10 @@ const StudyCards = () => {
     fetchCards();
   }, [deckIds]);
 
-  const handleNextCard = (isCorrect: boolean) => {
+  const handleNextCard = async (isCorrect: boolean) => {
     if (isCorrect) {
       setCorrectCount((prev) => prev + 1);
+      await incrementCardsReviewed(cards[currentIndex]?.cardId);
     } else {
       setIncorrectCount((prev) => prev + 1);
 

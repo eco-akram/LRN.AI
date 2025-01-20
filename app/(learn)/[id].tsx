@@ -20,6 +20,7 @@ import Animated, {
 } from "react-native-reanimated";
 
 import { useStatisticsContext } from "@/context/StatisticsProvider";
+import { useDeckContext } from "@/context/DeckProvider";
 
 interface Card {
   cardId: string;
@@ -42,8 +43,7 @@ const ReviewDeck = () => {
   const [incorrectCount, setIncorrectCount] = useState(0);
   const flipAnim = useSharedValue(0);
 
-  const { incrementCardsReviewed, streak, cardsReviewed } =
-    useStatisticsContext();
+  const { incrementCardsReviewed } = useStatisticsContext();
 
   const [deckName, setDeckName] = useState("");
 
@@ -148,6 +148,7 @@ const ReviewDeck = () => {
   }
 
   if (isReviewComplete) {
+
     return (
       <View className="flex-1 justify-center items-center bg-black p-5">
         <SuccessModal

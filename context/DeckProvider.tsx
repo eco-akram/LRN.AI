@@ -1,12 +1,25 @@
 /* eslint-disable prettier/prettier */
 import React, { createContext, useContext, useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { getUserDecks, getUserCards } from "@/lib/appwrite";
+import { getUserDecks, getUserCards, updateCardStatus } from "@/lib/appwrite";
 import { useGlobalContext } from "./GlobalProvider";
 
+interface Deck {
+  $id: string;
+  deckName: string;
+  cardCount: number;
+  status: "completed" | "incomplete" | "no-cards";
+  cards: {
+    cardId: string;
+    frontText: string;
+    backText: string;
+    status: boolean;
+  }[];
+}
+
 interface DeckContextType {
-  decks: any[];
-  refetchDecks: () => void;
+  decks: Deck[];
+  refetchDecks: () => Promise<void>;
   loading: boolean;
 }
 
@@ -31,6 +44,8 @@ export const DeckProvider: React.FC<{
   // Fetch decks and reset statuses if needed
   const fetchDecks = async () => {
     try {
+      if (!user?.$id) return;
+
       const today = new Date().toDateString();
       const lastReset = await AsyncStorage.getItem("lastResetDate");
 
@@ -40,25 +55,48 @@ export const DeckProvider: React.FC<{
         fetchedDecks.map(async (deck) => {
           const cards = await getUserCards(deck.$id);
 
-          // Reset status only once per day
-          if (lastReset !== today) {
-            const updatedCards = cards.map((card) => ({
-              ...card,
-              status: false,
-            }));
-            deck.cards = updatedCards;
-          } else {
-            deck.cards = cards;
-          }
-          return deck;
+          // Reset card statuses for a new day
+          const updatedCards = await Promise.all(
+            cards.map(async (card) => {
+              if (lastReset !== today) {
+                await updateCardStatus(card.cardId, false);
+              }
+              // Return the updated card object
+              return {
+                ...card,
+                status: lastReset !== today ? false : card.status,
+              };
+            })
+          );
+
+          const cardCount = updatedCards.length;
+          const allCompleted = updatedCards.every(
+            (card) => card.status === true
+          );
+
+          return {
+            $id: deck.$id,
+            deckName: deck.deckName,
+            cards: updatedCards,
+            cardCount,
+            status:
+              cardCount === 0
+                ? "no-cards"
+                : allCompleted
+                ? "completed"
+                : "incomplete",
+          };
         })
       );
 
       setDecks(updatedDecks);
-      await AsyncStorage.setItem("lastResetDate", today); // Save today's date
-      setLoading(false);
+      if (lastReset !== today) {
+        await AsyncStorage.setItem("lastResetDate", today); // Save today's date
+      }
+      console.log("lastResetDate from AsyncStorage:", lastReset);
     } catch (error) {
       console.error("Error fetching decks:", error);
+    } finally {
       setLoading(false);
     }
   };

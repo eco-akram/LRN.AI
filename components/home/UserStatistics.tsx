@@ -15,7 +15,7 @@ const UserStatistics = () => {
       </View>
       <View className="bg-layer2 border-2 border-layer3 rounded-xl p-5 flex-1 ml-2">
         <Text className="text-xl font-SegoeuiBold text-white">
-          Today you reviewed:
+          Reviews in total:
         </Text>
         <Text className="text-2xl font-SegoeuiBold text-white mt-1">
           📈 {cardsReviewed}
