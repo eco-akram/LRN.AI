@@ -72,6 +72,7 @@ export default function AiScreen() {
         }
       );
 
+      
       const generatedContent = response.data?.text;
 
       if (!generatedContent || generatedContent.trim() === "") {
