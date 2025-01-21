@@ -36,7 +36,7 @@ export default function LoginScreen() {
 
       router.replace("/home");
     } catch (error) {
-      Alert.alert("Error while creating user, submit function", error.message);
+      Alert.alert("Error while creating user, submit function");
     } finally {
       setIsSubmitting(false);
     }

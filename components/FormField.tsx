@@ -44,7 +44,10 @@ const FormField = ({
         )}
       </View>
 
-      <Text className="text-gray-300 font-light text-sm mt-1 mx-6">
+      <Text
+        className="text-gray-300 font-light text-sm mt-1 mx-6"
+        style={props.underTextStyle}
+      >
         {underText}
       </Text>
     </View>
