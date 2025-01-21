@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  SafeAreaView,
   StyleSheet,
   KeyboardAvoidingView,
   ScrollView,
@@ -14,6 +13,7 @@ import FormField from "@/components/FormField";
 import SubmitButton from "@/components/buttons/SubmitButton";
 import { createUser } from "@/lib/appwrite";
 import { useGlobalContext } from "@/context/GlobalProvider";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function RegisterScreen() {
   const { setUser, setIsLoggedIn } = useGlobalContext();
@@ -96,7 +96,13 @@ export default function RegisterScreen() {
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <ScrollView
+          contentContainerStyle={{
+            flexGrow: 1,
+            paddingBottom: 50,
+          }}
+          keyboardShouldPersistTaps="handled"
+        >
           <View style={styles.logoContainer}>
             <Image
               source={require("@/assets/images/Logo-icon.png")}
