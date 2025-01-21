@@ -115,6 +115,8 @@ export default function Home() {
     return <Loading />;
   }
 
+/*   console.log(decks.map((deck) => deck.$id)); */
+
   return (
     <LinearGradient
       colors={["#7C3AED", "#0A0A0A"]}

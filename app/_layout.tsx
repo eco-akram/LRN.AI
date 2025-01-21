@@ -39,11 +39,11 @@ export default function RootLayout() {
     SegoeuiLight: require("../assets/fonts/segoeuiLight.otf"),
   });
 
-  useEffect(() => {
+  /*   useEffect(() => {
     if (loaded) {
       SplashScreen.hideAsync();
     }
-  }, [loaded]);
+  }, [loaded]); */
 
   if (!loaded) {
     return (

@@ -59,7 +59,20 @@ export const DeckProvider: React.FC<{
           const updatedCards = await Promise.all(
             cards.map(async (card) => {
               if (lastReset !== today) {
-                await updateCardStatus(card.cardId, false);
+                try {
+                  // Check if the card exists and update the status
+                  if (card.$id) {
+                    await updateCardStatus(card.$id, false);
+                    console.log("Resetting card status:", card.$id);
+                  } else {
+                    console.warn("Card ID is missing or invalid:", card);
+                  }
+                } catch (error) {
+                  console.error(
+                    `Error resetting card status for card ${card.$id}:`,
+                    error
+                  );
+                }
               }
               // Return the updated card object
               return {
@@ -83,8 +96,8 @@ export const DeckProvider: React.FC<{
               cardCount === 0
                 ? "no-cards"
                 : allCompleted
-                ? "completed"
-                : "incomplete",
+                  ? "completed"
+                  : "incomplete",
           };
         })
       );
