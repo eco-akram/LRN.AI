@@ -50,10 +50,14 @@ export default function AiScreen() {
 
     try {
       const prompt = `
-        Based on the following input: "${inputText}" The questions and answers have to be short and understandable, generate ${numQuestions} pairs of questions and answers.
-        Format each pair as:
-        Question: <generated question>
-        Answer: <generated answer>
+        Based on the following input: "${inputText}" generate a concise deck name, short card names, and pairs of questions and answers. 
+        The output format should be:
+        Deck Name: <short and relevant deck name>
+        Card:
+        - Name: <short card name>
+        - Question: <generated question>
+        - Answer: <generated answer>
+        Generate ${numQuestions} cards.
       `;
 
       const response = await axios.post(
@@ -79,37 +83,44 @@ export default function AiScreen() {
         throw new Error("No content generated. Please try again.");
       }
 
-      const lines = generatedContent.trim().split("\n");
-      const generatedCards = [];
+      const lines: string[] = generatedContent.trim().split("\n");
+      let deckName: string = "";
+      const generatedCards: {
+        cardName: string;
+        frontText: string;
+        backText: string;
+      }[] = [];
 
-      for (let i = 0; i < lines.length; i++) {
-        if (lines[i].startsWith("Question:")) {
-          const question = lines[i].replace("Question: ", "").trim();
-          const answer = lines[i + 1]?.startsWith("Answer:")
-            ? lines[i + 1].replace("Answer: ", "").trim()
-            : "";
-          if (question && answer) {
-            const cardName =
-              question.length > 20 ? question.substring(0, 20) : question;
+      lines.forEach((line: string, index: number) => {
+        if (line.startsWith("Deck Name:")) {
+          deckName = line.replace("Deck Name: ", "").trim();
+        } else if (line.startsWith("- Name:")) {
+          const cardName = line.replace("- Name: ", "").trim();
+          const question =
+            lines[index + 1]?.replace("- Question: ", "").trim() || "";
+          const answer =
+            lines[index + 2]?.replace("- Answer: ", "").trim() || "";
+
+          if (cardName && question && answer) {
             generatedCards.push({
+              cardName,
               frontText: question,
               backText: answer,
-              cardName: cardName,
             });
           }
-          i++; // Move to the next line after the answer
         }
-      }
+      });
 
       const limitedCards = generatedCards.slice(0, numQuestions);
 
       if (limitedCards.length === 0) {
-        throw new Error(
-          "No valid question-answer pairs generated. Please try again."
-        );
+        throw new Error("No valid card data generated. Please try again.");
       }
 
-      const deckName = `Deck ${new Date().toLocaleString()}`;
+      if (!deckName) {
+        deckName = `Deck from ${new Date().toLocaleDateString()}`;
+      }
+
       await createAiDeck(deckName, limitedCards, user.$id);
 
       setSuccessModalData({
@@ -142,22 +153,36 @@ export default function AiScreen() {
 
         {/* Content */}
         <View className="flex-grow justify-center">
-          <Text className="text-white text-lg font-medium mb-3 text-center">
-            Add text for question generating
-          </Text>
-          <TextInput
-            style={styles.textInput}
-            multiline
-            placeholder="Add text here..."
-            placeholderTextColor="#848484"
-            value={inputText}
-            onChangeText={(text) => {
-              if (text.length <= tokenLimit) setInputText(text);
-            }}
-          />
+            <Text className="text-white text-lg font-medium font-SegoeuiBold mb-3 text-center">
+            Enter text to generate a deck
+            </Text>
+          <View className="bg-layer2 p-2 rounded-xl font-Segoeui">
+            <TextInput
+              className="text-secondary text-white"
+              multiline
+              placeholder="Enter text like 'Basics of programming.'"
+              placeholderTextColor="#848484"
+              value={inputText}
+              onChangeText={(text) => {
+                if (text.length <= tokenLimit) setInputText(text);
+              }}
+            />
+            <Text
+              style={{
+                textAlign: "right",
+                color:
+                  inputText.length >= tokenLimit
+                    ? "#FF6B6B"
+                    : "#848484", // Red near limit
+                marginTop: 5,
+              }}
+            >
+              {inputText.length}/{tokenLimit} characters
+            </Text>
+          </View>
           <View className="items-center mt-6">
-            <Text className="text-white text-base mb-2">
-              Number of questions
+            <Text className="text-white text-base mb-2 font-Segoeui">
+              Number of cards
             </Text>
             <View className="flex-row items-center">
               <TouchableOpacity
@@ -174,15 +199,15 @@ export default function AiScreen() {
                 <Text className="text-white text-2xl">+</Text>
               </TouchableOpacity>
             </View>
-            <Text className="text-gray-500 text-sm mt-2">
-              Limit (20) Questions
+            <Text className="text-secondary font-Segoeui text-sm mt-2">
+              Limit (20) Cards
             </Text>
           </View>
         </View>
 
         {/* Button */}
         <TouchableOpacity
-          className="w-full bg-[#A65EE6] rounded-xl py-4 justify-center items-center"
+          className="w-full bg-[#A65EE6] rounded-xl py-3 justify-center items-center"
           onPress={handleGenerate}
           disabled={loading || inputText.trim() === ""} // Disable if loading or inputText is empty
           style={{
