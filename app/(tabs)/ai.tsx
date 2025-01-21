@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, { useEffect, useState } from "react";
+import React, {  useState } from "react";
 import {
   Text,
   TextInput,
@@ -236,7 +236,7 @@ export default function AiScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+/* const styles = StyleSheet.create({
   textInput: {
     backgroundColor: "#141414",
     borderColor: "#321353",
@@ -249,4 +249,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginBottom: 20,
   },
-});
+}); */

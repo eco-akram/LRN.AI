@@ -34,6 +34,7 @@ export default function Home() {
   const [settingsVisible, setSettingsVisible] = useState(false);
   const [newUsername, setNewUsername] = useState("");
   const [confirmation, setConfirmation] = useState("");
+  
   const [visible, setVisible] = useState(false);
 
   const { decks, refetchDecks, loading } = useDeckContext();
@@ -45,7 +46,7 @@ export default function Home() {
         setUser(currentUser);
       } catch (error) {
         console.error("Error fetching current user:", error);
-        router.replace("/login");
+        router.replace("./index");
       }
     };
 
@@ -71,7 +72,6 @@ export default function Home() {
   const handleLogout = async () => {
     try {
       await signOut();
-      Alert.alert("Logged Out", "You have been logged out.");
       router.replace("/login");
     } catch (error) {
       console.error("Error logging out:", error);
@@ -115,7 +115,7 @@ export default function Home() {
     return <Loading />;
   }
 
-/*   console.log(decks.map((deck) => deck.$id)); */
+  /*   console.log(decks.map((deck) => deck.$id)); */
 
   return (
     <LinearGradient
