@@ -61,7 +61,10 @@ const DeckListDeck: React.FC<{
             </Text>
           </View>
         </View>
-        <TouchableOpacity onPress={() => setOptionsModalVisible(true)}>
+        <TouchableOpacity
+          hitSlop={20}
+          onPress={() => setOptionsModalVisible(true)}
+        >
           <Image
             source={icons.DotsIcon}
             resizeMode="contain"
@@ -85,7 +88,7 @@ const DeckListDeck: React.FC<{
             title="Change Deck Name"
             onPress={openEditDeckModal}
           />
-          <TouchableOpacity onPress={openDeleteDeckModal}>
+          <TouchableOpacity hitSlop={17} onPress={openDeleteDeckModal}>
             <Text className="font-Segoeui text-danger">Delete Deck</Text>
           </TouchableOpacity>
         </View>

@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import React, { Children, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import Modal from "react-native-modal";
 import { Text } from "react-native";
@@ -18,7 +18,6 @@ const CreateCardModal: React.FC<{
   const [newCardName, setNewCardName] = useState("");
   const [newCardFrontText, setNewCardFrontText] = useState("");
   const [newCardBackText, setNewCardBackText] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
   const [visible, setVisible] = useState(false);
   const [subtitle, setSubtitle] = useState("");
@@ -56,8 +55,6 @@ const CreateCardModal: React.FC<{
       return;
     }
 
-    setIsLoading(true);
-
     try {
       await createCard(deckId, newCardName, newCardFrontText, newCardBackText);
       refreshData();
@@ -68,8 +65,6 @@ const CreateCardModal: React.FC<{
     } catch (error) {
       console.error("Error creating card:", error);
       alert("Failed to create card. Please try again.");
-    } finally {
-      setIsLoading(false);
     }
 
     onClose();
@@ -84,7 +79,11 @@ const CreateCardModal: React.FC<{
       onBackButtonPress={onClose}
     >
       <View style={styles.modalContent}>
-        <TouchableOpacity onPress={onBack} style={styles.backButton}>
+        <TouchableOpacity
+          hitSlop={20}
+          onPress={onBack}
+          style={styles.backButton}
+        >
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
         <Text style={styles.title}>Create New Card</Text>

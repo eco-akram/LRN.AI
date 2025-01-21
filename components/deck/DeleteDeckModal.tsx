@@ -1,9 +1,6 @@
-import React, { useState } from "react";
 import { View, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import Modal from "react-native-modal";
 import { Text } from "react-native";
-import PrimaryButton from "../buttons/PrimaryButton";
-import SecondaryButton from "../buttons/SecondaryButton";
 import DangerButton from "../buttons/DangerButton";
 import { deleteDeckWithCards } from "@/lib/appwrite";
 import { useSuccessModal } from "@/context/ModalContext";
@@ -41,7 +38,11 @@ const DeleteDeckModal: React.FC<{
     >
       <View style={styles.modalContent}>
         {/* Back Button */}
-        <TouchableOpacity onPress={onBack} style={styles.backButton}>
+        <TouchableOpacity
+          hitSlop={20}
+          onPress={onBack}
+          style={styles.backButton}
+        >
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
 
@@ -56,7 +57,7 @@ const DeleteDeckModal: React.FC<{
 
         {/* Confirm and Cancel Buttons */}
         <DangerButton title="Delete Deck" onPress={handleDelete} />
-        <TouchableOpacity onPress={onClose}>
+        <TouchableOpacity hitSlop={20} onPress={onClose}>
           <Text className="font-Segoeui color-secondary">Cancel</Text>
         </TouchableOpacity>
       </View>

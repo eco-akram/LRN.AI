@@ -158,9 +158,9 @@ export default function AiScreen() {
             </Text>
           <View className="bg-layer2 p-2 rounded-xl font-Segoeui">
             <TextInput
-              className="text-secondary text-white"
+              className="text-white"
               multiline
-              placeholder="Enter text like 'Basics of programming.'"
+              placeholder="Type a topic like 'Basics of programming.'"
               placeholderTextColor="#848484"
               value={inputText}
               onChangeText={(text) => {
@@ -181,6 +181,10 @@ export default function AiScreen() {
             </Text>
           </View>
           <View className="items-center mt-6">
+            <Text className="text-secondary text-sm text-center mb-5 font-Segoeui">
+            💡 Tip : Be Specific!
+            Example: Instead of writing “History,” try “Key events in World War II” for more accurate questions and answers.
+            </Text>
             <Text className="text-white text-base mb-2 font-Segoeui">
               Number of cards
             </Text>

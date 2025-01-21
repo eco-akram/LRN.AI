@@ -39,7 +39,11 @@ const DeleteCardModal: React.FC<{
     >
       <View style={styles.modalContent}>
         {/* Back Button */}
-        <TouchableOpacity onPress={onBack} style={styles.backButton}>
+        <TouchableOpacity
+          hitSlop={20}
+          onPress={onBack}
+          style={styles.backButton}
+        >
           <Text style={styles.backText}>Back</Text>
         </TouchableOpacity>
 
@@ -54,7 +58,7 @@ const DeleteCardModal: React.FC<{
 
         {/* Confirm and Cancel Buttons */}
         <DangerButton title="Delete Card" onPress={handleDelete} />
-        <TouchableOpacity onPress={onClose}>
+        <TouchableOpacity hitSlop={20} onPress={onClose}>
           <Text className="font-Segoeui color-secondary">Cancel</Text>
         </TouchableOpacity>
       </View>
