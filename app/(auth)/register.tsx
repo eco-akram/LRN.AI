@@ -1,16 +1,9 @@
-import {
-  Alert,
-  Image,
-  ImageBackground,
-  Platform,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { Alert, Image, Platform, StyleSheet } from "react-native";
 import { Text } from "react-native";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FormField from "@/components/FormField";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import { useState } from "react";
 import SubmitButton from "@/components/buttons/SubmitButton";
 import { KeyboardAvoidingView } from "react-native";
@@ -22,6 +15,8 @@ import { useGlobalContext } from "../../context/GlobalProvider";
 export default function RegisterScreen() {
   const { setUser, setIsLoggedIn } = useGlobalContext();
 
+
+  
   const [form, setform] = useState({
     username: "",
     email: "",
@@ -33,6 +28,22 @@ export default function RegisterScreen() {
   const submit = async () => {
     if (!form.username || !form.email || !form.password) {
       Alert.alert("Error", "Please fill in all fields");
+    }
+
+    if (form.password.length < 6) {
+      Alert.alert("Error", "Password must be at least 6 characters long");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Simple regex for email validation
+    if (!emailRegex.test(form.email)) {
+      Alert.alert("Error", "Please enter a valid email address");
+      return;
+    }
+
+    if (form.username === "") {
+      Alert.alert("Error", "Username cannot be empty");
+      return;
     }
 
     setIsSubmitting(true);

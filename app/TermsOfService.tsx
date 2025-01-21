@@ -15,7 +15,8 @@ const TermsOfService = () => {
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
         <TouchableOpacity
-          onPress={() => router.replace("/home")}
+          hitSlop={20}
+          onPress={() => router.push("/home")}
           style={styles.closeButton}
         >
           <Ionicons name="close" size={28} color="white" />

@@ -80,6 +80,14 @@ export default function RootLayout() {
                   name="+not-found"
                   options={{ headerShown: false }}
                 />
+                <Stack.Screen
+                  name="privacyPolicy"
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="TermsOfService"
+                  options={{ headerShown: false }}
+                />
               </Stack>
               <StatusBar style="light" />
             </StatisticsProvider>

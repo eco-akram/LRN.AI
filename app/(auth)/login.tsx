@@ -1,19 +1,11 @@
-import {
-  Alert,
-  Image,
-  Platform,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { Alert, Image, Platform, StyleSheet } from "react-native";
 import { Text } from "react-native";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FormField from "@/components/FormField";
-import { Link, router } from "expo-router";
-import { LinearGradient } from "expo-linear-gradient";
+import { router } from "expo-router";
 import { useState } from "react";
 import SubmitButton from "@/components/buttons/SubmitButton";
-import { ImageBackground } from "react-native";
 import { KeyboardAvoidingView } from "react-native";
 
 import { getCurrentUser, signIn } from "../../lib/appwrite";
@@ -44,7 +36,7 @@ export default function LoginScreen() {
 
       router.replace("/home");
     } catch (error) {
-      Alert.alert("Error while creating user, submit function");
+      Alert.alert("Error while creating user, submit function", error.message);
     } finally {
       setIsSubmitting(false);
     }

@@ -46,7 +46,7 @@ export default function Home() {
         setUser(currentUser);
       } catch (error) {
         console.error("Error fetching current user:", error);
-        router.replace("./index");
+        router.replace("/login");
       }
     };
 
@@ -214,7 +214,7 @@ export default function Home() {
               <Text className="text-xl font-SegoeuiBold text-white">
                 Settings
               </Text>
-              <TouchableOpacity onPress={() => setSettingsVisible(false)}>
+              <TouchableOpacity hitSlop={20} onPress={() => setSettingsVisible(false)}>
                 <Ionicons name="close" size={24} color="white" />
               </TouchableOpacity>
             </View>
@@ -238,12 +238,16 @@ export default function Home() {
               />
               <DangerButton title="Log out" onPress={handleLogout} />
               <View className="flex flex-row justify-evenly mt-5">
-                <Text className="font-Segoeui text-secondary w-1/2">
+              <TouchableOpacity hitSlop={20} onPress={() => router.replace('/privacyPolicy')}>
+                <Text className="font-Segoeui text-secondary">
                   Terms of service
                 </Text>
-                <Text className="font-Segoeui text-secondary w-1/3">
+                </TouchableOpacity>
+                <TouchableOpacity hitSlop={20} onPress={() => router.replace('/privacyPolicy')}>
+                <Text className="font-Segoeui text-secondary">
                   Privacy Policy
                 </Text>
+                </TouchableOpacity>
               </View>
             </View>
           </View>
