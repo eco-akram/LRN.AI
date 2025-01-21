@@ -4,12 +4,12 @@
     "slug": "LRN_AI",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/Logo-icon.png",
+    "icon": "./assets/branding/icon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "splash": {
-      "image": "./assets/images/Logo-icon.png",
+      "image": "./assets/branding/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#A65EE6"
     },
@@ -19,8 +19,8 @@
     "android": {
       "package": "com.kvk.lrn_ai",
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/logo-icon.png",
-        "backgroundColor": "#141414"
+        "foregroundImage": "./assets/branding/adaptive-icon.png",
+        "backgroundColor": "#A65EE6"
       }
     },
     "web": {
@@ -33,7 +33,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/Logo-icon.png",
+          "image": "./assets/branding/splash.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#141414"

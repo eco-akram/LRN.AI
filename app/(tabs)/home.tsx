@@ -3,7 +3,6 @@ import React, { useState, useEffect, useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import {
   FlatList,
-  RefreshControl,
   Text,
   View,
   TouchableOpacity,
@@ -14,19 +13,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import icons from "@/constants/icons";
-import {
-  getUserDecks,
-  changeUserName,
-  signOut,
-  getCurrentUser,
-  getUserCards,
-} from "@/lib/appwrite";
+import { changeUserName, signOut, getCurrentUser } from "@/lib/appwrite";
 import Modal from "react-native-modal";
 import { useGlobalContext } from "@/context/GlobalProvider";
 import { router } from "expo-router";
-import useAppwrite from "@/lib/useAppwrite";
-
-import SmartStudyButton from "@/components/home/SmartStudyButton";
 
 import PrimaryButton from "@/components/buttons/PrimaryButton";
 import DangerButton from "@/components/buttons/DangerButton";
@@ -34,6 +24,9 @@ import FormInput from "@/components/buttons/FormInput";
 import DeckListHome from "@/components/home/DeckListHome";
 import Loading from "@/components/Loading";
 import SuccessModal from "@/components/modals/SuccessModal";
+import UserStatistics from "@/components/home/UserStatistics";
+
+import { useDeckContext } from "@/context/DeckProvider";
 
 export default function Home() {
   const { user, setUser } = useGlobalContext();
@@ -41,13 +34,9 @@ export default function Home() {
   const [settingsVisible, setSettingsVisible] = useState(false);
   const [newUsername, setNewUsername] = useState("");
   const [confirmation, setConfirmation] = useState("");
-
-  const { data: decks, refetch } = useAppwrite(() => getUserDecks(user.$id));
-  const [refreshing, setRefreshing] = useState(false);
-  const [hasRefreshed, setHasRefreshed] = useState(false);
   const [visible, setVisible] = useState(false);
 
-  const [loading, setLoading] = useState(false);
+  const { decks, refetchDecks, loading } = useDeckContext();
 
   useEffect(() => {
     const checkUser = async () => {
@@ -56,7 +45,7 @@ export default function Home() {
         setUser(currentUser);
       } catch (error) {
         console.error("Error fetching current user:", error);
-        router.replace("/login"); // Navigate to the login screen if not authenticated
+        router.replace("/login");
       }
     };
 
@@ -68,21 +57,15 @@ export default function Home() {
     username: string;
   }
 
-  const onRefresh = async () => {
-    setRefreshing(true);
-    await refetch();
-    setRefreshing(false);
-  };
-
   useFocusEffect(
     useCallback(() => {
       const timer = setTimeout(() => {
         console.log("Refetching decks after 5 seconds...");
-        refetch();
+        refetchDecks();
       }, 5000);
 
       return () => clearTimeout(timer); // Cleanup the timer on unmount
-    }, [refetch])
+    }, [refetchDecks])
   );
 
   const handleLogout = async () => {
@@ -108,7 +91,6 @@ export default function Home() {
       await changeUserName(user.$id, newUsername);
       setConfirmation("Username changed successfully!");
       setNewUsername("");
-      await refetch();
       setUser((prevUser: User) => ({ ...prevUser, username: newUsername }));
     } catch (error) {
       console.error("Error updating username:", error);
@@ -125,46 +107,15 @@ export default function Home() {
     }
   }, [settingsVisible]);
 
-  const handleReviewIncompleteDeck = async () => {
-    try {
-      setLoading(true);
-
-      const allDecks = await getUserDecks(user.$id);
-      const incompleteDecks = [];
-
-      for (const deck of allDecks) {
-        const cards = await getUserCards(deck.$id);
-        const hasIncompleteCards = cards.some((card) => !card.status); // Check for at least one incomplete card
-
-        if (hasIncompleteCards) {
-          incompleteDecks.push(deck); // Add deck to incomplete decks if it has incomplete cards
-        }
-      }
-
-      if (incompleteDecks.length === 0) {
-        setVisible(true);
-        setLoading(false);
-        return;
-      }
-
-      const randomDeck =
-        incompleteDecks[Math.floor(Math.random() * incompleteDecks.length)]; // Select random incomplete deck
-
-      router.push({
-        pathname: "/(learn)/[id]",
-        params: { id: randomDeck.$id }, // Pass the deckId as id
-      });
-    } catch (error) {
-      console.error("Error selecting random deck:", error);
-      Alert.alert("Error", "Failed to start review for incomplete deck.");
-    } finally {
-      setLoading(false);
-    }
+  const handlePress = () => {
+    router.push("/(learn)/(advancedLearn)/[id]");
   };
 
   if (loading) {
     return <Loading />;
   }
+
+/*   console.log(decks.map((deck) => deck.$id)); */
 
   return (
     <LinearGradient
@@ -192,20 +143,7 @@ export default function Home() {
         </View>
 
         {/* Streak and Stats Section */}
-        <View className="flex-row justify-between mb-5">
-          <View className="bg-layer2 border-2 border-layer3 justify-center rounded-xl p-5 flex-2 mr-2">
-            <Text className="text-xl font-SegoeuiBold text-white">Streak</Text>
-            <Text className="text-2xl font-SegoeuiBold text-white">🔥 7</Text>
-          </View>
-          <View className="bg-layer2 border-2 border-layer3 rounded-xl p-5 flex-1 ml-2">
-            <Text className="text-xl font-SegoeuiBold text-white">
-              Today you reviewed:
-            </Text>
-            <Text className="text-2xl font-SegoeuiBold text-white mt-1">
-              📈 21
-            </Text>
-          </View>
-        </View>
+        <UserStatistics />
 
         {/* Smart Study Mode */}
         <View className="mb-5">
@@ -213,7 +151,7 @@ export default function Home() {
             Smart Study Mode
           </Text>
           <TouchableOpacity
-            onPress={handleReviewIncompleteDeck}
+            onPress={handlePress}
             className="rounded-2xl overflow-hidden border-2 border-secondaryBG"
           >
             <LinearGradient
@@ -224,7 +162,7 @@ export default function Home() {
             >
               <View className="flex flex-row justify-between items-center px-6">
                 <Text className="text-xl text-white font-Segoeui py-7">
-                  Review Incomplete Decks
+                  Review Multiple Decks
                 </Text>
                 <Image source={icons.ArrowTopRight} style={styles.iconArrow} />
               </View>
@@ -244,10 +182,15 @@ export default function Home() {
             className="flex-1 rounded-lg w-full"
             horizontal={true}
             contentContainerStyle={{ paddingBottom: 20 }}
-            data={decks as { deckName: string; $id: string }[]}
+            data={decks}
             keyExtractor={(item) => item.$id}
             renderItem={({ item }) => (
-              <DeckListHome deckName={item.deckName} deckId={item.$id} />
+              <DeckListHome
+                deckName={item.deckName}
+                deckId={item.$id}
+                cardCount={item.cardCount}
+                status={item.status}
+              />
             )}
             ListEmptyComponent={() => (
               <Text className="text-center text-secondary mt-5">
@@ -306,6 +249,8 @@ export default function Home() {
           </View>
         </View>
       </Modal>
+
+      {/* Success Modal */}
       <SuccessModal
         title="Yay! 🎉"
         subtitle="You have completed all your decks."

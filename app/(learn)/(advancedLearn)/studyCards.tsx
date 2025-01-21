@@ -1,8 +1,8 @@
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { getUserCards, getUserDeckById } from "@/lib/appwrite";
+import { useRouter, useLocalSearchParams } from "expo-router";
+import { getUserCards } from "@/lib/appwrite";
 import Loading from "@/components/Loading";
 import ErrorModal from "@/components/modals/ErrorModal";
 import SuccessModal from "@/components/modals/SuccessModal";
@@ -18,9 +18,7 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-
 import { useStatisticsContext } from "@/context/StatisticsProvider";
-import { useDeckContext } from "@/context/DeckProvider";
 
 interface Card {
   cardId: string;
@@ -30,9 +28,9 @@ interface Card {
   status: boolean;
 }
 
-const ReviewDeck = () => {
+const StudyCards = () => {
   const router = useRouter();
-  const { id: deckId } = useLocalSearchParams();
+  const { deckIds } = useLocalSearchParams();
   const [cards, setCards] = useState<Card[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
@@ -41,31 +39,27 @@ const ReviewDeck = () => {
   const [loading, setLoading] = useState(true);
   const [correctCount, setCorrectCount] = useState(0);
   const [incorrectCount, setIncorrectCount] = useState(0);
+
   const flipAnim = useSharedValue(0);
 
   const { incrementCardsReviewed } = useStatisticsContext();
 
-  const [deckName, setDeckName] = useState("");
-
   useEffect(() => {
     const fetchCards = async () => {
-      if (!deckId) {
+      if (!deckIds || typeof deckIds !== "string") {
         setIsEmptyDeck(true);
         setLoading(false);
         return;
       }
 
       try {
-        const deckInfo = await getUserDeckById(deckId); // New function to fetch deck info
-        setDeckName(deckInfo.deckName); // Set the deck name
+        const deckIdArray = deckIds.split(",");
+        const allCards: Card[] = [];
 
-        const fetchedCards = await getUserCards(deckId);
-        if (fetchedCards.length === 0) {
-          setIsEmptyDeck(true);
-          setLoading(false);
-        } else {
-          setCards(
-            fetchedCards.map((card) => ({
+        for (const deckId of deckIdArray) {
+          const fetchedCards = await getUserCards(deckId);
+          allCards.push(
+            ...fetchedCards.map((card) => ({
               cardId: card.$id,
               cardName: card.cardName,
               frontText: card.frontText ?? "No question provided",
@@ -73,22 +67,28 @@ const ReviewDeck = () => {
               status: card.status ?? false,
             }))
           );
-          setLoading(false);
-          setIsEmptyDeck(false);
-          setCurrentIndex(0);
+        }
+
+        if (allCards.length === 0) {
+          setIsEmptyDeck(true);
+        } else {
+          setCards(allCards);
         }
       } catch (error) {
         console.error("Error fetching cards:", error);
+        setIsEmptyDeck(true);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchCards();
-  }, [deckId]);
+  }, [deckIds]);
 
   const handleNextCard = async (isCorrect: boolean) => {
     if (isCorrect) {
       setCorrectCount((prev) => prev + 1);
-      await incrementCardsReviewed(cards[currentIndex]?.cardId); // Increment card review count
+      await incrementCardsReviewed(cards[currentIndex]?.cardId);
     } else {
       setIncorrectCount((prev) => prev + 1);
 
@@ -139,23 +139,22 @@ const ReviewDeck = () => {
       <View className="flex-1 justify-center items-center bg-black p-5">
         <ErrorModal
           title="No Cards Available"
-          subtitle="This deck has no cards. Please add cards before reviewing."
+          subtitle="The selected decks have no cards. Please add cards before reviewing."
           isVisible={true}
-          onClose={() => router.back()}
+          onClose={() => router.push("/home")}
         />
       </View>
     );
   }
 
   if (isReviewComplete) {
-
     return (
       <View className="flex-1 justify-center items-center bg-black p-5">
         <SuccessModal
           title="Review Complete"
           subtitle={`You answered ${correctCount} correctly and ${incorrectCount} incorrectly.`}
           isVisible={true}
-          onClose={() => router.back()}
+          onClose={() => router.push("/home")}
         />
       </View>
     );
@@ -167,7 +166,7 @@ const ReviewDeck = () => {
         {/* HEADER */}
         <View className="flex-row items-center justify-between mb-5">
           <Text className="font-SegoeuiBlack text-white text-2xl">
-            {deckName}
+            Study Cards
           </Text>
           <TouchableOpacity onPress={() => router.back()}>
             <Ionicons name="close" size={24} color="white" />
@@ -246,7 +245,7 @@ const ReviewDeck = () => {
   );
 };
 
-export default ReviewDeck;
+export default StudyCards;
 
 const styles = StyleSheet.create({
   gradient: {
