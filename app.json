@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "LRN.AI",
-    "slug": "LRN_AI",
+    "slug": "lrnai",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/branding/icon.png",
@@ -26,19 +26,10 @@
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/branding/icon.png"
     },
     "plugins": [
       "expo-router",
-      [
-        "expo-splash-screen",
-        {
-          "image": "./assets/branding/splash.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#141414"
-        }
-      ],
       [
         "expo-video",
         {
@@ -46,10 +37,20 @@
           "supportsPictureInPicture": true
         }
       ],
-      "expo-font"
+      "expo-font",
+      "expo-asset"
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "4e7c6293-0abd-4d67-8d96-28814904fc42"
+      }
+    },
+    "owner": "akrokk"
   }
 }

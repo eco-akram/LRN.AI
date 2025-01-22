@@ -1,35 +1,62 @@
+import React, { useState } from "react";
 import {
   Alert,
   Image,
   Platform,
   StyleSheet,
-  TouchableOpacity,
+  Text,
+  View,
+  KeyboardAvoidingView,
 } from "react-native";
-import { Text } from "react-native";
-import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import FormField from "@/components/FormField";
-import { Link, router } from "expo-router";
-import { LinearGradient } from "expo-linear-gradient";
-import { useState } from "react";
 import SubmitButton from "@/components/buttons/SubmitButton";
-import { ImageBackground } from "react-native";
-import { KeyboardAvoidingView } from "react-native";
+import { router } from "expo-router";
 
 import { getCurrentUser, signIn } from "../../lib/appwrite";
 import { useGlobalContext } from "../../context/GlobalProvider";
 
 export default function LoginScreen() {
-  const { setUser, setIsLoggedIn, isLoggedIn } = useGlobalContext();
+  const { setUser, setIsLoggedIn } = useGlobalContext();
+
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [form, setform] = useState({
+  const [form, setForm] = useState({
     email: "",
     password: "",
   });
 
+  const [errors, setErrors] = useState({
+    email: "",
+    password: "",
+  });
+
+  const validateInputs = () => {
+    const newErrors = { email: "", password: "" };
+    let isValid = true;
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!form.email) {
+      newErrors.email = "Email is required.";
+      isValid = false;
+    } else if (!emailRegex.test(form.email)) {
+      newErrors.email = "Enter a valid email address.";
+      isValid = false;
+    }
+
+    // Password validation
+    if (!form.password) {
+      newErrors.password = "Password is required.";
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
   const submit = async () => {
-    if (!form.email || !form.password) {
-      Alert.alert("Error", "Please fill in all fields");
+    if (!validateInputs()) {
+      return;
     }
 
     setIsSubmitting(true);
@@ -40,11 +67,12 @@ export default function LoginScreen() {
 
       setUser(result);
       setIsLoggedIn(true);
-      console.log("isLoggedIn:", isLoggedIn);
-
       router.replace("/home");
     } catch (error) {
-      Alert.alert("Error while creating user, submit function");
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        email: "Invalid credentials. Please try again.",
+      }));
     } finally {
       setIsSubmitting(false);
     }
@@ -73,26 +101,34 @@ export default function LoginScreen() {
           <FormField
             value={form.email}
             placeholder="Email"
-            underText="Please enter your email"
+            underText={errors.email || "Please enter your email."}
+            underTextStyle={[
+              styles.underText,
+              errors.email && styles.errorText,
+            ]}
             otherStyles="mb-4 mt-4"
-            handleChangeText={(e) =>
-              setform({
-                ...form,
-                email: e,
-              })
-            }
+            handleChangeText={(e) => {
+              setForm({ ...form, email: e });
+              if (errors.email) {
+                setErrors((prev) => ({ ...prev, email: "" }));
+              }
+            }}
           />
 
           <FormField
             value={form.password}
-            placeholder={"Password"}
-            underText="Don't share your password with anyone else."
-            handleChangeText={(e) =>
-              setform({
-                ...form,
-                password: e,
-              })
-            }
+            placeholder="Password"
+            underText={errors.password || "Enter your password."}
+            underTextStyle={[
+              styles.underText,
+              errors.password && styles.errorText,
+            ]}
+            handleChangeText={(e) => {
+              setForm({ ...form, password: e });
+              if (errors.password) {
+                setErrors((prev) => ({ ...prev, password: "" }));
+              }
+            }}
             otherStyles="mb-4"
           />
         </View>
@@ -116,12 +152,6 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-  background: {
-    width: "100%",
-    height: "100%",
-    flex: 1,
-    //position: "absolute",
-  },
   logo: {
     width: 70,
     height: 70,
@@ -132,6 +162,10 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     alignItems: "center",
   },
+  underText: {
+    color: "#848484",
+  },
+  errorText: {
+    color: "#f43f5e", // Red for errors
+  },
 });
-
-//TODO: POLISH HERE, AND CHANGE THE GRADIENT, MAKE COLOURS EASYLI CHANGABLE

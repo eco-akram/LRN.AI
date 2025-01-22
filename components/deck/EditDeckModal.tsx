@@ -53,7 +53,11 @@ const EditDeckModal: React.FC<{
         onBackButtonPress={onClose}
       >
         <View style={styles.modalContent}>
-          <TouchableOpacity onPress={onBack} style={styles.backButton}>
+          <TouchableOpacity
+            hitSlop={20}
+            onPress={onBack}
+            style={styles.backButton}
+          >
             <Text style={styles.backText}>Back</Text>
           </TouchableOpacity>
           <Text style={styles.title}>Edit Deck Name</Text>

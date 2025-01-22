@@ -91,7 +91,10 @@ const DeckListCards: React.FC<{
         <Text className="text-white text-lg font-Segoeui">{card.cardName}</Text>
       </View>
       <View className="flex-row gap-1">
-        <TouchableOpacity onPress={() => setChangeCardVisible(true)}>
+        <TouchableOpacity
+          hitSlop={20}
+          onPress={() => setChangeCardVisible(true)}
+        >
           <Text className="text-secondary font-Segoeui">Edit</Text>
         </TouchableOpacity>
       </View>
@@ -127,7 +130,7 @@ const DeckListCards: React.FC<{
             onChangeText={setNewCardBackText}
           />
           <PrimaryButton title="Save your changes" onPress={handleChangeCard} />
-          <TouchableOpacity onPress={openDeleteCardModal}>
+          <TouchableOpacity hitSlop={17} onPress={openDeleteCardModal}>
             <Text className="font-Segoeui text-danger">Delete Card</Text>
           </TouchableOpacity>
         </View>

@@ -1,28 +1,30 @@
+import React, { useState } from "react";
 import {
-  Alert,
-  Image,
-  ImageBackground,
-  Platform,
   StyleSheet,
-  TouchableOpacity,
+  KeyboardAvoidingView,
+  ScrollView,
+  View,
+  Image,
+  Text,
+  Platform,
 } from "react-native";
-import { Text } from "react-native";
-import { View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { router } from "expo-router";
 import FormField from "@/components/FormField";
-import { Link, router } from "expo-router";
-import { useState } from "react";
 import SubmitButton from "@/components/buttons/SubmitButton";
-import { KeyboardAvoidingView } from "react-native";
-import { ScrollView } from "react-native";
-
-import { createUser } from "../../lib/appwrite";
-import { useGlobalContext } from "../../context/GlobalProvider";
+import { createUser } from "@/lib/appwrite";
+import { useGlobalContext } from "@/context/GlobalProvider";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function RegisterScreen() {
   const { setUser, setIsLoggedIn } = useGlobalContext();
 
-  const [form, setform] = useState({
+  const [form, setForm] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+
+  const [errors, setErrors] = useState({
     username: "",
     email: "",
     password: "",
@@ -30,9 +32,45 @@ export default function RegisterScreen() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const validateInputs = () => {
+    const newErrors = { username: "", email: "", password: "" };
+    let isValid = true;
+
+    // Username validation
+    if (!form.username) {
+      newErrors.username = "Username is required.";
+      isValid = false;
+    } else if (form.username.length < 3) {
+      newErrors.username = "Username must be at least 3 characters.";
+      isValid = false;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!form.email) {
+      newErrors.email = "Email is required.";
+      isValid = false;
+    } else if (!emailRegex.test(form.email)) {
+      newErrors.email = "Enter a valid email address.";
+      isValid = false;
+    }
+
+    // Password validation
+    if (!form.password) {
+      newErrors.password = "Password is required.";
+      isValid = false;
+    } else if (form.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters.";
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
   const submit = async () => {
-    if (!form.username || !form.email || !form.password) {
-      Alert.alert("Error", "Please fill in all fields");
+    if (!validateInputs()) {
+      return;
     }
 
     setIsSubmitting(true);
@@ -41,11 +79,12 @@ export default function RegisterScreen() {
       const result = await createUser(form.email, form.password, form.username);
       setUser(result);
       setIsLoggedIn(true);
-
-      //SOMETHING HERE LATER
       router.replace("/home");
     } catch (error) {
-      Alert.alert("Error while creating user, submit function");
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        email: "Failed to create user. Please try again.",
+      }));
     } finally {
       setIsSubmitting(false);
     }
@@ -57,7 +96,13 @@ export default function RegisterScreen() {
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
       >
-        <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+        <ScrollView
+          contentContainerStyle={{
+            flexGrow: 1,
+            paddingBottom: 50,
+          }}
+          keyboardShouldPersistTaps="handled"
+        >
           <View style={styles.logoContainer}>
             <Image
               source={require("@/assets/images/Logo-icon.png")}
@@ -75,10 +120,14 @@ export default function RegisterScreen() {
             <FormField
               value={form.username}
               placeholder="Username"
-              underText="Please enter your username"
+              underText={errors.username || "Please enter your username."}
+              underTextStyle={[
+                styles.underText,
+                errors.username && styles.errorText,
+              ]}
               otherStyles="mb-4 mt-4"
               handleChangeText={(e) =>
-                setform({
+                setForm({
                   ...form,
                   username: e,
                 })
@@ -88,10 +137,14 @@ export default function RegisterScreen() {
             <FormField
               value={form.email}
               placeholder="Email"
-              underText="Please enter your email"
+              underText={errors.email || "Please enter your email."}
+              underTextStyle={[
+                styles.underText,
+                errors.username && styles.errorText,
+              ]}
               otherStyles="mb-4 mt-4"
               handleChangeText={(e) =>
-                setform({
+                setForm({
                   ...form,
                   email: e,
                 })
@@ -101,9 +154,15 @@ export default function RegisterScreen() {
             <FormField
               value={form.password}
               placeholder={"Password"}
-              underText="Don't share your password with anyone else."
+              underText={
+                errors.password || "Don't share your password with anyone else."
+              }
+              underTextStyle={[
+                styles.underText,
+                errors.password && styles.errorText,
+              ]}
               handleChangeText={(e) =>
-                setform({
+                setForm({
                   ...form,
                   password: e,
                 })
@@ -132,25 +191,20 @@ export default function RegisterScreen() {
 }
 
 const styles = StyleSheet.create({
-  background: {
-    width: "100%",
-    height: "100%",
-    flex: 1,
-    //position: "absolute",
-  },
   logo: {
     width: 70,
     height: 70,
     marginBottom: 50,
   },
-  buttonContainer: {
-    marginHorizontal: 12, // Equivalent to mx-3
-    marginBottom: 20, // Equivalent to mb-5
-    marginTop: 20, // Equivalent to mt-5
-  },
   logoContainer: {
     flex: 1,
     justifyContent: "flex-end",
     alignItems: "center",
+  },
+  underText: {
+    color: "#848484",
+  },
+  errorText: {
+    color: "#f43f5e",
   },
 });

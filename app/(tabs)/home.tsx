@@ -34,6 +34,7 @@ export default function Home() {
   const [settingsVisible, setSettingsVisible] = useState(false);
   const [newUsername, setNewUsername] = useState("");
   const [confirmation, setConfirmation] = useState("");
+
   const [visible, setVisible] = useState(false);
 
   const { decks, refetchDecks, loading } = useDeckContext();
@@ -44,8 +45,8 @@ export default function Home() {
         const currentUser = await getCurrentUser();
         setUser(currentUser);
       } catch (error) {
-        console.error("Error fetching current user:", error);
-        router.replace("/login");
+        /*         console.error("Error fetching current user:", error);
+         */ router.replace("/login");
       }
     };
 
@@ -71,7 +72,6 @@ export default function Home() {
   const handleLogout = async () => {
     try {
       await signOut();
-      Alert.alert("Logged Out", "You have been logged out.");
       router.replace("/login");
     } catch (error) {
       console.error("Error logging out:", error);
@@ -115,7 +115,7 @@ export default function Home() {
     return <Loading />;
   }
 
-/*   console.log(decks.map((deck) => deck.$id)); */
+  /*   console.log(decks.map((deck) => deck.$id)); */
 
   return (
     <LinearGradient
@@ -214,7 +214,10 @@ export default function Home() {
               <Text className="text-xl font-SegoeuiBold text-white">
                 Settings
               </Text>
-              <TouchableOpacity onPress={() => setSettingsVisible(false)}>
+              <TouchableOpacity
+                hitSlop={20}
+                onPress={() => setSettingsVisible(false)}
+              >
                 <Ionicons name="close" size={24} color="white" />
               </TouchableOpacity>
             </View>
@@ -238,12 +241,22 @@ export default function Home() {
               />
               <DangerButton title="Log out" onPress={handleLogout} />
               <View className="flex flex-row justify-evenly mt-5">
-                <Text className="font-Segoeui text-secondary w-1/2">
-                  Terms of service
-                </Text>
-                <Text className="font-Segoeui text-secondary w-1/3">
-                  Privacy Policy
-                </Text>
+                <TouchableOpacity
+                  hitSlop={20}
+                  onPress={() => router.replace("/privacyPolicy")}
+                >
+                  <Text className="font-Segoeui text-secondary">
+                    Terms of service
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  hitSlop={20}
+                  onPress={() => router.replace("/privacyPolicy")}
+                >
+                  <Text className="font-Segoeui text-secondary">
+                    Privacy Policy
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
           </View>

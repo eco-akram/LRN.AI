@@ -1,12 +1,5 @@
-import React, { useEffect } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  BackHandler,
-} from "react-native";
-import { Link, router, Redirect } from "expo-router";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { router, Redirect } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Image } from "expo-image";
 import { StatusBar } from "react-native";
@@ -14,6 +7,14 @@ import { useGlobalContext } from "@/context/GlobalProvider";
 
 export default function WelcomeScreen() {
   const { isLoading, isLoggedIn } = useGlobalContext();
+
+  /*   useEffect(() => {
+    async function loadAssets() {
+      await Asset.loadAsync(require("@/assets/shadergradient.gif"));
+      setIsAssetLoaded(true);
+    }
+    loadAssets();
+  }, []); */
 
   if (!isLoading && isLoggedIn) return <Redirect href="/home" />;
 
@@ -27,6 +28,7 @@ export default function WelcomeScreen() {
       <Image
         contentFit="cover"
         source={require("@/assets/shadergradient.gif")}
+        placeholder="U2QZJbV[00~qWBj@fQj@ozWBR5f6"
         style={styles.background}
       />
       <SafeAreaView className="flex-1">
@@ -59,23 +61,23 @@ export default function WelcomeScreen() {
           </TouchableOpacity>
         </View>
         <View className="flex-row justify-center align-middle items-center mx-3 mb-3 mt-4">
-          <Link
-            className="text-gray-300 font-light text-sm"
-            href={
-              "https://www.google.com/url?sa=i&url=https%3A%2F%2Funsplash.com%2Fs%2Fphotos%2Fcute-cat&psig=AOvVaw054OEy7zh1J_qx7iy4ygeO&ust=1734643699801000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCODUg7-hsooDFQAAAAAdAAAAABAE"
-            }
+          <TouchableOpacity
+            hitSlop={20}
+            onPress={() => router.replace("/privacyPolicy")}
           >
-            Privacy policy
-          </Link>
+            <Text className="text-gray-300 font-light text-sm">
+              Privacy policy
+            </Text>
+          </TouchableOpacity>
           <Text className="text-gray-300 font-light text-sm mx-3">|</Text>
-          <Link
-            className="text-gray-300 font-light text-sm"
-            href={
-              "https://www.google.com/url?sa=i&url=https%3A%2F%2Funsplash.com%2Fs%2Fphotos%2Fcute-cat&psig=AOvVaw054OEy7zh1J_qx7iy4ygeO&ust=1734643699801000&source=images&cd=vfe&opi=89978449&ved=0CBEQjRxqFwoTCODUg7-hsooDFQAAAAAdAAAAABAE"
-            }
+          <TouchableOpacity
+            hitSlop={20}
+            onPress={() => router.replace("/privacyPolicy")}
           >
-            Terms of service
-          </Link>
+            <Text className="text-gray-300 font-light text-sm">
+              Privacy Policy
+            </Text>
+          </TouchableOpacity>
         </View>
       </SafeAreaView>
     </View>
