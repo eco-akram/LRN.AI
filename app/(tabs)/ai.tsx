@@ -13,6 +13,7 @@ import axios from "axios";
 import { createAiDeck } from "@/lib/appwrite";
 import { useGlobalContext } from "@/context/GlobalProvider";
 import SuccessModal from "@/components/modals/SuccessModal";
+import { COHERE_API_KEY } from '@env'
 
 export default function AiScreen() {
   const [inputText, setInputText] = useState("");
@@ -71,7 +72,7 @@ export default function AiScreen() {
         },
         {
           headers: {
-            Authorization: `Bearer 3zUiPGP5a9KAm4PiOwwcdATxVrXKyk5URBspSk1G`,
+            Authorization: `Bearer ${COHERE_API_KEY}`,
             "Content-Type": "application/json",
           },
         }
